@@ -1,5 +1,7 @@
 from ctypes import *
-lib = cdll.LoadLibrary("kernals/build/mat_gen.dylib")
+import os
+
+lib = cdll.LoadLibrary("kernals/build/mat_gen.so")
 
 
 class object:
@@ -19,8 +21,8 @@ class MATGEN:
 
     def _srandn(size, length):
         ap = (c_float*size[0]*size[1])()
-        lib.drandfill.argtypes = [c_int, c_float, c_float, c_float*size[0]*size[1]]
-        lib.drandfill(size[0]*size[1], length[0], length[1], ap)
+        lib.srandfill.argtypes = [c_int, c_float, c_float, c_float*size[0]*size[1]]
+        lib.srandfill(size[0]*size[1], length[0], length[1], ap)
         ap = POINTER(c_float)(ap)
         return object(ap, size, 'float')
     
