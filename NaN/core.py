@@ -1,7 +1,9 @@
 from ctypes import *
 import os
 
-lib = cdll.LoadLibrary("kernals/build/mat_gen.so")
+curr_dir = os.getcwd()
+path = os.path.join(curr_dir, 'kernals/build/mat_gen.so')
+lib = cdll.LoadLibrary(path)
 
 
 class object:
