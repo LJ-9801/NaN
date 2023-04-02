@@ -1,8 +1,7 @@
-#NaN
+# NaN
 This is a linear algebra library like Numpy, it's not as fast, but it works.
 
-##Requirement
-
+## Requirement
 you need to find out where blas and lapack shared library is installed in
 your machine. If you had numpy installed, then these math kernals should exit in your OS. Simply locate the lapack and blas share library file and change the parameter in the ctypes find_library function in NaN/mkl.py and the requrement.py to the .so file or .dylib location specified in your machine.
 
