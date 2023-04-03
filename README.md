@@ -11,6 +11,10 @@ Note that this repository will be updated so that this step could be skipped in 
 
 Once you have these directory changed, run "bash setup.sh" to setup the library. If every step is successful, you can now test the library using the test.py file.
 
-
+## TODO
+1. autofind blas and lapack kernals
+2. matrix indexing is curretly not avaliable
+3. matrix factorization to be implemented
+4. dynamic typing
 
 
