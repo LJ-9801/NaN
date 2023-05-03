@@ -4,7 +4,7 @@ $(info uname_S is $(uname_S))
 $(info uname_M is $(uname_M))
 
 CC = clang
-CFLAGS = -fopenmp -std=gnu99 -O2 -Wall -lm
+CFLAGS = -lpthread -std=gnu99 -O2 -Wall -lm
 DEPS = mat_gen.h
 MKDIR_P = mkdir
 OUT_DIR = ../kernals/build
@@ -17,6 +17,7 @@ mat_gen.dylib: mat_gen.c $(DEPS)
 	$(MKDIR_P) $(OUT_DIR)
 	$(CC) $(CFLAGS) $< -o $(OUT_DIR)/$@
 endif
+
 ifeq ($(uname_S),Linux)
 # Linux
 CFLAGS += -shared -fPIC

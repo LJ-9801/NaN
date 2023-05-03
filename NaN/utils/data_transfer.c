@@ -16,6 +16,7 @@ PyObject *tolist(PyObject *self ,PyObject *args)
     if(!PyList_Check(list))
         return NULL;
 
+    //#pragma omp parallel for num_threads(8) collapse(2)
     PyObject *newlist = PyList_New(n1);
     for (int i = 0; i < n1; i++)
     {
@@ -26,6 +27,7 @@ PyObject *tolist(PyObject *self ,PyObject *args)
             double item_ptr = PyFloat_AsDouble(item);
             PyList_SetItem(tmp, j, PyFloat_FromDouble(item_ptr));
         }
+        //#pragma omp critical
         PyList_SetItem(newlist, i, tmp);
     }
 

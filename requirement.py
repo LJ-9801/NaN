@@ -1,12 +1,17 @@
 import ctypes, ctypes.util
+import subprocess as sp
 
-if ctypes.util.find_library('cblas') == None:
-    raise ImportError('Error, CBLAS not found')
+if ctypes.util.find_library('openblas') == None:
+    print("BLAS library not found, installing...")
+    sp.run(['conda', 'install', '-c', 'conda-forge', 'openblas'])
+    print("BLAS library installed")
 else:
     print('CBLAS found')
-if ctypes.util.find_library('lapack') == None:
-    raise ImportError('Error, LAPACK not found')
-else:
-    print('LAPACK found')
 
-print('All libraries found')
+print("Setting up libraries...")
+if sp.run(["find", "kernals/build"], stdout=sp.PIPE).stdout.decode('utf-8') == '':
+    sp.run(['make', '-C', 'kernals'])
+sp.run(['cd', 'NaN/utils', '&&', 'pip install .', 'cd ..'])
+
+print('NaN is set up, runnning tests...')
+#sp.run(['python', 'test.py'])

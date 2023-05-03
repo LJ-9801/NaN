@@ -1,71 +1,68 @@
 from NaN.matrix import matrix
 from ctypes import *
-from NaN.core import MATGEN
-
+from NaN.type import ALLType
+from NaN.mkl import CBLAS
 
 class matGen:
-    def randn(size, length, dtype):
+    def randn(size, length, dtype = 'float'):
         if type(size) != tuple:
             raise TypeError('Invalid data type, size input must be of type tuple')
         if type(length) != tuple:
             raise TypeError('Invalid data type, range input must be of type tuple')
-        
-        if dtype == 'double':
-            A = MATGEN._drandn(size, length)
-        elif dtype == 'float':
-            A = MATGEN._srandn(size, length)
+        func = ALLType.MatGenDict['randn'][dtype]
+        A = func(size, length)
         return matrix(A, dtype)
 
-    def zeros(size, dtype):
+    def zeros(size, dtype = 'float'):
         if type(size) != tuple:
             raise TypeError('Invalid data type, size input must be of type tuple')
-        if dtype == 'double':
-            ret = MATGEN._dzeros(size)
-        elif dtype == 'float':
-            ret = MATGEN._szeros(size)
-        return matrix(ret, dtype)
+        if dtype not in ALLType.TypeDict: 
+            raise TypeError('Invalid data type')
+        func = ALLType.MatGenDict['zeros'][dtype]
+        A = func(size)
+        return matrix(A, dtype)
 
-    def eye(size, dtype):
+    def eye(size, dtype = 'float'):
         if type(size) != int:
             raise TypeError('Invalid data type, input must be of type int')
-        if dtype == 'double':
-            ret = MATGEN._deye(size)
-        elif dtype == 'float':
-            ret = MATGEN._seye(size)
-        return matrix(ret, dtype)
+        if dtype not in ALLType.TypeDict: 
+            raise TypeError('Invalid data type')
+        func = ALLType.MatGenDict['eye'][dtype]
+        A = func(size)
+        return matrix(A, dtype)
     
     def rot2(angle, dtype = 'float'):
-        if dtype == 'double':
-            ret = MATGEN._drot2(angle)
-        elif dtype == 'float':
-            ret = MATGEN._srot2(angle)
-        return  matrix(ret, dtype)
+        if dtype not in ALLType.TypeDict: 
+            raise TypeError('Invalid data type')
+        func = ALLType.MatGenDict['rot2'][dtype]
+        A = func(angle)
+        return matrix(A, dtype)
     
     def rot3(angle, axis, dtype = 'float'):
         if(axis > 2):
             raise TypeError('Invalid rotation axis')    
-        if dtype == 'double':
-            ret = MATGEN._drot3(angle, axis)
-        elif dtype == 'float':
-            ret = MATGEN._srot3(angle, axis)
-        return matrix(ret, dtype)
+        if dtype not in ALLType.TypeDict:
+            raise TypeError('Invalid data type')
+        func = ALLType.MatGenDict['rot3'][dtype]
+        A = func(angle, axis)
+        return matrix(A, dtype)
     
 
-class ops:
-    def eig(in_matrix):
+class ops(matrix):
+    def eig(in_matrix: matrix):
         return None
 
-    def transpose(in_matrix):
+    def transpose(in_matrix: matrix):
         return None
 
-    def det(in_matrix):
+    def det(in_matrix: matrix):
         return None
 
-    def svd(in_matrix):
+    def svd(in_matrix: matrix):
         return None
     
-    def inv(in_matrix):
+    def inv(in_matrix: matrix):
         return None
 
-    def pinv(in_matrix):
+    def pinv(in_matrix: matrix):
         return None

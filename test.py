@@ -1,6 +1,7 @@
 from NaN.lib import matGen as mg
 from NaN.matrix import matrix
 from NaN.matrix import utils
+
 from colorama import Fore
 import numpy as np
 import time
@@ -12,23 +13,29 @@ green = Fore.GREEN
 success = green + 'Success' + Fore.RESET
 fail = red + 'Fail' + Fore.RESET
 
-N = 2048
+
+t1 = time.monotonic()
+N = 1024
 # perform square matrix multiplication verifications
 # ===================================================================
 print('-' * 50)
 print('Performing matrix multiplication verifications')
 print('-' * 50)
-print('Generate random matrices and perform matrix multiplication')
+print('Generate random matrices and perform matrix multiplication and addition')
 A = mg.randn((N, N), (0, 1), 'double')
 B = mg.randn((N, N), (-5, 5), 'double')
+D = A+B+A
 C = A*B*A
 C = np.ctypeslib.as_array(C.data, (N,N))
 A = np.ctypeslib.as_array(A.data, (N,N))
 B = np.ctypeslib.as_array(B.data, (N,N))
+D = np.ctypeslib.as_array(D.data, (N,N))
 An = np.array(A, dtype=np.float64)
 Bn = np.array(B, dtype=np.float64)
 Cn = An @ Bn @ An
+Dn = An + Bn + An
 print(success if np.allclose(C, Cn) else fail)
+print(success if np.allclose(D, Dn) else fail)
 #assert np.allclose(C.data, Cn)
 print("Testing rotation matrix generation and operations")
 r = mg.rot2(45)
@@ -102,3 +109,5 @@ r3 = matrix([[r3[0][0], r3[2][0]],[r3[0][2],r3[2][2]]], 'double')
 r3 = np.ctypeslib.as_array(r3.data, (2,2))
 print(success if np.allclose(r3, r2) else fail)
 print('-' * 50)
+t = time.monotonic() - t1
+print(f"Test completed in {t:.2f} seconds")

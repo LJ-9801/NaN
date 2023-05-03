@@ -1,80 +1,204 @@
 #define PY_SSIZE_T_CLEAN
-//#include <Python.h>
-#include <stdio.h>
-//#include <stdlib.h>
+#include <stdlib.h>
 #include <math.h>
 #include <time.h>
-#include <omp.h>
+#include <pthread.h>
 #include "mat_gen.h"
+#define NUM_THREADS 8
 
-// make this file into universal binary    
+void *drandfill_thread(void *arg)
+{
+    double_data_t *data = (double_data_t *)arg;
+
+    unsigned int seed = time(NULL) ^ (data->thread_id + (data->thread_id << 16));
+
+    for (int t = data->start; t < data->end; t++)
+    {
+        data->array[t] = (double)rand_r(&seed) / (double)RAND_MAX * (data->r2 - data->r1) + data->r1;
+    }
+
+    return NULL;
+}
+
+void *srandfill_thread(void *arg)
+{
+    float_data_t *data = (float_data_t *)arg;
+
+    unsigned int seed = time(NULL) ^ (data->thread_id + (data->thread_id << 16));
+
+    for (int t = data->start; t < data->end; t++)
+    {
+        data->array[t] = (float)rand_r(&seed) / (float)RAND_MAX * (data->r2 - data->r1) + data->r1;
+    }
+
+    return NULL;
+}
+
+void *dzero_thread(void *arg)
+{
+    double_data_t *data = (double_data_t *)arg;
+
+    for (int t = data->start; t < data->end; t++)
+    {
+        data->array[t] = 0.0;
+    }
+
+    return NULL;
+}
+
+void *szero_thread(void *arg){
+    float_data_t *data = (float_data_t *)arg;
+    for (int t = data->start; t < data->end; t++)
+    {
+        data->array[t] = 0.0;
+    }
+    return NULL;
+}
+
+void *deye_thread(void *arg){
+    double_data_t *data = (double_data_t *)arg;
+    int n1 = data->n1;
+
+    for (int t = data->start; t < data->end; t++)
+    {
+        data->array[t] = ((t % (n1+1)) == 0) ? 1.0 : 0.0;
+    }
+    return NULL;
+}
+
+void *seye_thread(void *arg){
+    float_data_t *data = (float_data_t *)arg;
+    int n1 = data->n1;
+
+    for (int t = data->start; t < data->end; t++)
+    {
+        data->array[t] = ((t % (n1+1)) == 0) ? 1.0 : 0.0;
+    }
+    return NULL;
+}
+
 void drandfill(const int n1, const double r1, const double r2, double *array)
 {
-    int t;
-    srand((unsigned int)time(NULL));
+    srand(time(NULL));
+    pthread_t threads[NUM_THREADS];
+    double_data_t double_data[NUM_THREADS];
 
-    #pragma omp parallel for private(t)
-    for(t=0;t<n1;t++)
+    int chunk_size = n1 / NUM_THREADS;
+
+    for (int i = 0; i < NUM_THREADS; i++)
     {
-        array[t] = (double)rand() / (double)RAND_MAX * (r2 - r1) + r1;
+        double_data[i].thread_id = i;
+        double_data[i].start = i * chunk_size;
+        double_data[i].end = (i == NUM_THREADS - 1) ? n1 : (i + 1) * chunk_size;
+        double_data[i].r1 = r1;
+        double_data[i].r2 = r2;
+        double_data[i].array = array;
+        pthread_create(&threads[i], NULL, drandfill_thread, &double_data[i]);
+    }
+
+    for (int i = 0; i < NUM_THREADS; i++)
+    {
+        pthread_join(threads[i], NULL);
     }
 }
 
-
 void srandfill(const int n1, const float r1, const float r2, float *array)
 {
-    int t;
-    srand((unsigned int)time(NULL));
+    srand(time(NULL));
 
-    #pragma omp parallel for private(t)
-    for(t=0;t<n1;t++)
+    pthread_t threads[NUM_THREADS];
+    float_data_t float_data[NUM_THREADS];
+
+    int chunk_size = n1 / NUM_THREADS;
+
+    for (int i = 0; i < NUM_THREADS; i++)
     {
-        array[t] = (float)rand() / (float)RAND_MAX * (r2 - r1) + r1;
+        float_data[i].thread_id = i;
+        float_data[i].start = i * chunk_size;
+        float_data[i].end = (i == NUM_THREADS - 1) ? n1 : (i + 1) * chunk_size;
+        float_data[i].r1 = r1;
+        float_data[i].r2 = r2;
+        float_data[i].array = array;
+        pthread_create(&threads[i], NULL, srandfill_thread, &float_data[i]);
+    }
+
+    for (int i = 0; i < NUM_THREADS; i++)
+    {
+        pthread_join(threads[i], NULL);
     }
 }
 
 //generate zeros matrix
 void dzeros(const int n1, const int n2, double *array){
-    int t,j;
-    #pragma omp parallel for private(t,j)
-    for(t=0;t<n1;t++)
+    pthread_t threads[NUM_THREADS];
+    double_data_t double_data[NUM_THREADS];
+
+    int chunk_size = n1 / NUM_THREADS;
+
+    for (int i = 0; i < NUM_THREADS; i++)
     {
-        for(j=0;j<n2;j++)
-        {
-            array[j + t*n1] = 0.0;
-        }
+        double_data[i].thread_id = i;
+        double_data[i].start = i * chunk_size;
+        double_data[i].end = (i == NUM_THREADS - 1) ? n1 : (i + 1) * chunk_size;
+        double_data[i].array = array;
+        pthread_create(&threads[i], NULL, dzero_thread, &double_data[i]);
     }
+
+    for (int i = 0; i < NUM_THREADS; i++)
+    {
+        pthread_join(threads[i], NULL);
+    }
+
 }
 
 void szeros(const int n1, const int n2, float *array){
-    int t,j;
-    #pragma omp parallel for private(t,j)
-    for(t=0;t<n1;t++)
+    pthread_t threads[NUM_THREADS];
+    float_data_t float_data[NUM_THREADS];
+
+    int chunk_size = n1 / NUM_THREADS;
+
+    for (int i = 0; i < NUM_THREADS; i++)
     {
-        for(j=0;j<n2;j++)
-        {
-            array[j + t*n1] = 0.0;
-        }
+        float_data[i].thread_id = i;
+        float_data[i].start = i * chunk_size;
+        float_data[i].end = (i == NUM_THREADS - 1) ? n1 : (i + 1) * chunk_size;
+        float_data[i].array = array;
+        pthread_create(&threads[i], NULL, szero_thread, &float_data[i]);
+    }
+
+    for (int i = 0; i < NUM_THREADS; i++)
+    {
+        pthread_join(threads[i], NULL);
     }
 }
 
 // generate identity matrix
 void deye(int n, double *array){
-    int t,j;
-    #pragma omp parallel for private(t,j)
-    for(t=0;t<n;t++)
+    pthread_t threads[NUM_THREADS];
+    double_data_t double_data[NUM_THREADS];
+
+    int chunk_size = n*n / NUM_THREADS;
+
+    for (int i = 0; i < NUM_THREADS; i++)
     {
-        for(j=0;j<n;j++)
-        {
-            if(t == j) array[j + t*n] = 1.0;
-            else array[j + t*n] = 0.0;
-        }
+        double_data[i].thread_id = i;
+        double_data[i].start = i * chunk_size;
+        double_data[i].n1 = n;
+        double_data[i].end = (i == NUM_THREADS - 1) ? (n*n) : (i + 1) * chunk_size;
+        double_data[i].array = array;
+
+        pthread_create(&threads[i], NULL, deye_thread, &double_data[i]);
+    }
+
+    for (int i = 0; i < NUM_THREADS; i++)
+    {
+        pthread_join(threads[i], NULL);
     }
 }
 
 void seye(int n, float *array){
     int t,j;
-    #pragma omp parallel for private(t,j)
+    //#pragma omp parallel for private(t,j)
     for(t=0;t<n;t++)
     {
         for(j=0;j<n;j++)
@@ -83,6 +207,7 @@ void seye(int n, float *array){
             else array[j + t*n] = 0.0;
         }
     }
+    //#pragma omp barrier
 }
 
 void drot3(double *array, double theta, int axis){

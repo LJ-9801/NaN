@@ -1,8 +1,7 @@
-from NaN.mkl import CBLAS
 from ctypes import *
-from ctypes.util import find_library
 import data_transfer
 from NaN.core import object
+from NaN.type import ALLType
 
 
 class utils:
@@ -58,25 +57,41 @@ class matrix:
         out_dim = (self.shape[0], other.shape[1])
         if(type(other) != type(self)):
             raise TypeError('Invalid data type, input must be of type matrix')
-        
         if(self.shape[1] != other.shape[0]):
             raise ValueError('Matrix dimensions are not compatible')
-        
-        # we need to support dynamic typing
-        # this is only temperary
         if self.dtype != other.dtype:
             raise TypeError('Matrix data types are not compatible')
-        # no need to convert to pointers, all calculation 
-        # is done using pointers under the hood
         A = self.core.data
         B = other.core.data
-        if self.dtype == 'double':
-            C = CBLAS._dgemm(A,B,self.shape,other.shape)
-        elif self.dtype == 'float': # float does not work
-            C = CBLAS._sgemm(A,B,self.shape,other.shape)
-        C = object(C, out_dim, self.dtype)
-        self.C = matrix(C, self.dtype)
-        return self.C
+        func = ALLType.MatOpsDict['matmul'][self.dtype]
+        C = func(A,B,self.shape,other.shape)
+        return matrix(object(C, out_dim, self.dtype), self.dtype)
+    
+    def __add__(self, other):
+        if(type(other) != type(self)):
+            raise TypeError('Invalid data type, input must be of type matrix')
+        if(self.shape != other.shape):
+            raise ValueError('Matrix dimensions are not compatible')
+        if self.dtype != other.dtype:
+            raise TypeError('Matrix data types are not compatible')
+        A = self.core.data
+        B = other.core.data
+        func = ALLType.MatOpsDict['matadd'][self.dtype]
+        C = func(A,B,self.shape)
+        return matrix(object(C, self.shape, self.dtype), self.dtype)
+    
+    def __sub__(self, other):
+        if(type(other) != type(self)):
+            raise TypeError('Invalid data type, input must be of type matrix')
+        if(self.shape != other.shape):
+            raise ValueError('Matrix dimensions are not compatible')
+        if self.dtype != other.dtype:
+            raise TypeError('Matrix data types are not compatible')
+        A = self.core.data
+        B = other.core.data
+        func = ALLType.MatOpsDict['matsub'][self.dtype]
+        C = func(A,B,self.shape)
+        return matrix(object(C, self.shape, self.dtype), self.dtype)
     
     def __str__(self):
         #this will realize the matrix from the pointers

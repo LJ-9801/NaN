@@ -2,8 +2,10 @@ from ctypes import *
 import os
 
 curr_dir = os.getcwd()
-path = os.path.join(curr_dir, 'kernals/build/mat_gen.so')
+path = os.path.join(curr_dir, 'kernals/build/mat_gen.dylib')
 lib = cdll.LoadLibrary(path)
+
+
 
 
 class object:
@@ -14,6 +16,9 @@ class object:
 
 
 class MATGEN:
+    def __init__(self) -> None:
+        pass
+    
     def _drandn(size, length):
         ap = (c_double*size[0]*size[1])()
         lib.drandfill.argtypes = [c_int, c_double, c_double, c_double*size[0]*size[1]]
