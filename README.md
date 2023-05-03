@@ -16,8 +16,9 @@ in the near future. Rigth now the following kernels are available.
 2. matmul
 
 ## Requirements(For Now)
-1. Install and activate a conda environment with a prefered Python version
-2. That's it!
+1. Right now it only support Unix-like OS
+2. Install and activate a conda environment with a prefered Python version
+3. That's it!
 
 ## Installation
 1. run "python requirement.py" to install the library
