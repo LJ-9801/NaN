@@ -1,13 +1,12 @@
 import ctypes, ctypes.util
 import os
 
-# find CBLAS and LAPACK
+# find CBLAS
 cblas = ctypes.util.find_library('openblas')
-lapack = ctypes.util.find_library('lapack')
 
-# load CBLAS and LAPACK
-lapack_lib = ctypes.cdll.LoadLibrary(lapack)
+# load CBLAS
 cblas_lib = ctypes.cdll.LoadLibrary(cblas)
+
 
 class MemOps:
     def __init__(self) -> None:
@@ -30,7 +29,7 @@ class MemOps:
         return B
 
 
-# LEVEL1 BLAS
+#BLAS routines
 # matrix to matrix
 class CBLAS:
     def __init__(self) -> None:
