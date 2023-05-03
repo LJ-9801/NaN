@@ -15,8 +15,6 @@ in the near future. Rigth now the following kernels are available.
 1. add/substract
 2. matmul
 
-### matrix factorization(TO BE IMPLEMENTED)
-
 ## Requirements(For Now)
 1. Install and activate a conda environment with a prefered Python version
 2. That's it!
@@ -24,11 +22,14 @@ in the near future. Rigth now the following kernels are available.
 ## Installation
 1. run "python requirement.py" to install the library
 
-
 ## TODO
 1. matrix indexing is curretly not avaliable
-2. matrix factorization to be implemented
 3. dynamic typing
 4. GPU support
+
+## Kernels To Be Implemented
+1. matrix factorization
+2. solvers
+3. outter/inner/dot/kron product
 
 
