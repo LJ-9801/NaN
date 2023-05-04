@@ -1,0 +1,12 @@
+.vscode/
+
+.DS_STORE
+
+__pycache__/
+
+kernals/build/
+
+NaN/utils/build/
+
+NaN/utils/utils_lib.egg-info/
+
