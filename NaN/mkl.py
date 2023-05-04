@@ -3,7 +3,6 @@ import os
 
 # find CBLAS
 cblas = ctypes.util.find_library('openblas')
-
 # load CBLAS
 cblas_lib = ctypes.cdll.LoadLibrary(cblas)
 

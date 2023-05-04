@@ -109,5 +109,16 @@ r3 = matrix([[r3[0][0], r3[2][0]],[r3[0][2],r3[2][2]]], 'double')
 r3 = np.ctypeslib.as_array(r3.data, (2,2))
 print(success if np.allclose(r3, r2) else fail)
 print('-' * 50)
+r4 = r3.copy()
+r5 = np.ctypeslib.as_array(r4.data, (2,2))
+print(success if np.allclose(r5, r4) else fail)
+
+N2 = 100
+A = mg.randn((N2, N2), (0, 1), 'double')
+B = A[0:5, 0:5]
+A = np.ctypeslib.as_array(A.data, (N2,N2))
+B = np.ctypeslib.as_array(B.data)
+Bn = A[0:5, 0:5]
+print(success if B.all()==Bn.all() else fail)
 t = time.monotonic() - t1
 print(f"Test completed in {t:.2f} seconds")

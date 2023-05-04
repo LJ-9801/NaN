@@ -24,9 +24,8 @@ in the near future. Rigth now the following kernels are available.
 1. run "python requirement.py" to install the library
 
 ## TODO
-1. matrix indexing is curretly not avaliable
-3. dynamic typing
-4. GPU support
+1. dynamic typing
+2. GPU support
 
 ## Kernels To Be Implemented
 1. matrix factorization

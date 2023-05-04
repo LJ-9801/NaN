@@ -2,6 +2,7 @@ from ctypes import *
 import data_transfer
 from NaN.core import object
 from NaN.type import ALLType
+from NaN.mkl import MemOps
 
 
 class utils:
@@ -52,6 +53,10 @@ class matrix:
             self.shape = data.shape
             self.data = data.data
 
+    def copy(self):
+        ret = ALLType.MemOpsDict['copy'][self.dtype](self.data, self.shape)
+        return matrix(object(ret, self.shape, self.dtype), self.dtype)
+
     
     def __mul__(self, other):
         out_dim = (self.shape[0], other.shape[1])
@@ -97,8 +102,21 @@ class matrix:
         #this will realize the matrix from the pointers
         return str(utils.toList(self.core.data, self.shape))
     
-    def __getItem__(self, index):
-        if self.shape[1] == 1:
-            return self.core.data[index]
-        else:
-            return self.core.data[index[0]*self.shape[1] + index[1]]
+    def __getitem__(self, index):
+        if isinstance(index, tuple) and isinstance(index[0], int) and isinstance(index[1], int):
+            ret = ALLType.MemOpsDict['copy'][self.dtype](self.core.data[index[0] + index[1]*self.shape[0]], (1,1))
+            return matrix(object(ret, (1,1), self.dtype), self.dtype)
+        elif isinstance(index, tuple) and isinstance(index[0], int) and isinstance(index[1], slice):
+            ret = ALLType.MemOpsDict['copy'][self.dtype](self.core.data[index[0] + index[1].start*self.shape[0]:index[0] + index[1].stop*self.shape[0]], (index[1].stop - index[1].start, 1))
+            return matrix(object(ret, (index[1].stop - index[1].start, 1), self.dtype), self.dtype)
+        elif isinstance(index, tuple) and isinstance(index[0], slice) and isinstance(index[1], int):
+            ret = ALLType.MemOpsDict['copy'][self.dtype](self.core.data[index[0].start + index[1]*self.shape[0]:index[0].stop + index[1]*self.shape[0]], (index[0].stop - index[0].start, 1))
+            return matrix(object(ret, (index[0].stop - index[0].start, 1), self.dtype), self.dtype)
+        elif isinstance(index, tuple) and isinstance(index[0], slice) and isinstance(index[1], slice):
+            ret = (ALLType.TypeDict[self.dtype]*((index[0].stop - index[0].start)*(index[1].stop - index[1].start)))()
+            for i in range(index[1].start, index[1].stop):
+                ret[(i - index[1].start)*(index[0].stop - index[0].start):(i - index[1].start)*(index[0].stop - index[0].start) + (index[0].stop - index[0].start)] = self.core.data[index[0].start + i*self.shape[0]:index[0].stop + i*self.shape[0]]
+            #ret = ALLType.MemOpsDict['copy'][self.dtype](ret, (index[0].stop - index[0].start, index[1].stop - index[1].start))
+            return matrix(object(ret, (index[0].stop - index[0].start, index[1].stop - index[1].start), self.dtype), self.dtype)
+                
+            

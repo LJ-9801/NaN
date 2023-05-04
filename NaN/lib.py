@@ -1,7 +1,6 @@
 from NaN.matrix import matrix
 from ctypes import *
 from NaN.type import ALLType
-from NaN.mkl import CBLAS
 
 class matGen:
     def randn(size, length, dtype = 'float'):
