@@ -16,13 +16,12 @@ else:
 print("Installing Numpy for testing...")
 sp.run(['conda', 'install', 'numpy'])
 print("Installing Colorama...")
-sp.run(['conda', 'install -c conda-forge', 'colorama'])
+sp.run(['conda', 'install -c conda-forge ', 'colorama'])
 
 print("Setting up libraries...")
 if sp.run(["find", "kernals/build"], stdout=sp.PIPE).stdout.decode('utf-8') == '':
     sp.run(['make', '-C', 'kernals'])
 sp.run(['cd', 'NaN/utils', '&&', 'pip install .'])
-sp.run(['cd ..'])
 sp.run(['cd ..'])
 
 input("NaN installed, do you want to run the test? (y/n)")
