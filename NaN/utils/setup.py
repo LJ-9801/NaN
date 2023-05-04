@@ -1,7 +1,7 @@
 from setuptools import setup, Extension
 
-extra_compile_args = ['-std=c99', '-O3', '-fopenmp',
-                      '-lm', '-Wall', '-Wextra',
+extra_compile_args = ['-std=c99', '-O3',
+                      '-Wall', '-Wextra',
                       '-Wno-unused-parameter', 
                       '-Wno-unused-function', 
                       '-Wno-unused-variable', 
