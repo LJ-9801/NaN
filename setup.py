@@ -1,4 +1,5 @@
 from setuptools import setup, Extension
+import platform
 import os
 
 # setup extension
@@ -25,10 +26,10 @@ def matgen_lib():
     path = os.getcwd() + '/NaN/kernels/'
     extra_compile_args = ['-lpthread', '-std=gnu99', '-O2', '-Wall', '-lm']
     
-    if os.name == 'Darwin':
+    if platform.system() == 'Darwin':
         extra_compile_args.append('-dynamiclib')
     
-    if os.name == 'Linux':
+    if platform.system() == 'Linux':
         extra_compile_args.append('-fPIC')
         extra_compile_args.append('-shared')
     
