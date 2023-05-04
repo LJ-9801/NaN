@@ -2,7 +2,7 @@ from ctypes import *
 import os
 
 curr_dir = os.getcwd()
-path = os.path.join(curr_dir, 'kernals/build/mat_gen.dylib')
+path = os.path.join(curr_dir, 'NaN/src/build/mat_gen.dylib')
 lib = cdll.LoadLibrary(path)
 
 
