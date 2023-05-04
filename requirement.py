@@ -14,6 +14,8 @@ if sp.run(["find", "kernals/build"], stdout=sp.PIPE).stdout.decode('utf-8') == '
 sp.run(['cd', 'NaN/utils', '&&', 'pip install .'])
 sp.run(['cd ..'])
 sp.run(['cd ..'])
+sp.run(['conda', 'install', 'numpy'])
+sp.run(['conda', 'install -c conda-forge', 'colorama'])
 
 print('NaN is set up, runnning tests...')
 #sp.run(['python', 'test.py'])
