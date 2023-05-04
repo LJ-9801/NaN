@@ -11,7 +11,9 @@ else:
 print("Setting up libraries...")
 if sp.run(["find", "kernals/build"], stdout=sp.PIPE).stdout.decode('utf-8') == '':
     sp.run(['make', '-C', 'kernals'])
-sp.run(['cd', 'NaN/utils', '&&', 'pip install .', 'cd ..'])
+sp.run(['cd', 'NaN/utils', '&&', 'pip install .'])
+sp.run(['cd ..'])
+sp.run(['cd ..'])
 
 print('NaN is set up, runnning tests...')
 #sp.run(['python', 'test.py'])
