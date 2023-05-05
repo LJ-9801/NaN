@@ -10,3 +10,6 @@ NaN/utils/build/
 
 NaN/utils/utils_lib.egg-info/
 
+NaN.egg-info
+
+build/
