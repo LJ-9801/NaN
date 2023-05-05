@@ -21,7 +21,7 @@ in the near future. Rigth now the following kernels are available.
 3. That's it!
 
 ## Installation
-1. run "python requirement.py" to install the library
+1. run "bash setup.sh" to install the library
 
 ## TODO
 1. dynamic typing
