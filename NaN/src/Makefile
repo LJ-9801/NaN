@@ -7,7 +7,7 @@ CC = clang
 CFLAGS = -lpthread -std=gnu99 -O2 -Wall -lm
 DEPS = mat_gen.h
 MKDIR_P = mkdir
-OUT_DIR = ../kernals/build
+OUT_DIR = build
 
 
 ifeq ($(uname_S),Darwin)
