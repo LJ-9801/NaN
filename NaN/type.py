@@ -1,6 +1,7 @@
 from ctypes import *
 from NaN.core import MATGEN
 from NaN.mkl import CBLAS, MemOps
+from NaN.core import cArray
 
 class ALLType:
         TypeDict = {'double': c_double, 
@@ -23,6 +24,9 @@ class ALLType:
                       'matsub': {'double': CBLAS._dsub, 'float': CBLAS._ssub},}
         
         MemOpsDict = {'copy': {'double': MemOps._dcopy, 'float': MemOps._scopy},}
+
+        ArrayDict = {'double': {'1d': cArray.to_double_1dpointers, '2d': cArray.to_double_2dpointers},
+                     'float':  {'1d': cArray.to_float_1dpointers, '2d': cArray.to_float_2dpointers}}
         
     
     

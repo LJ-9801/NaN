@@ -1,11 +1,10 @@
 from ctypes import *
+import ctypes.util
 import os
 
 curr_dir = os.getcwd()
 path = os.path.join(curr_dir, 'NaN/src/build/mat_gen.dylib')
 lib = cdll.LoadLibrary(path)
-
-
 
 
 class object:
@@ -14,6 +13,42 @@ class object:
         self.shape = shape
         self.data = data
 
+class cArray:
+    def _to_2dlist(inpointer, shape: tuple):
+        outlist = []
+        for i in range(shape[0]):
+            outlist.append(inpointer[i*shape[1]:(i+1)*shape[1]])
+        return outlist
+    
+    def _to_1dlist(inpointer, shape: tuple):
+        outlist = []
+        for i in range(shape[0]):
+            outlist.append(inpointer[i])
+        return outlist
+
+    def to_double_1dpointers(inlist):
+        mem = (c_double*len(inlist))()
+        mem[:] = inlist[:]
+        return POINTER(c_double)(mem)
+
+    def to_double_2dpointers(inlist):
+        mem = (c_double*len(inlist[0])*len(inlist))()
+        for i in range(len(inlist)):
+            for j in range(len(inlist[0])):
+                mem[i][j] = inlist[i][j]
+        return POINTER(c_double)(mem)
+
+    def to_float_1dpointers(inlist):
+        mem = (c_float*len(inlist))()
+        mem[:] = inlist[:]
+        return POINTER(c_float)(mem)
+
+    def to_float_2dpointers(inlist):
+        mem = (c_float*len(inlist[0])*len(inlist))()
+        for i in range(len(inlist)):
+            for j in range(len(inlist[0])):
+                mem[i][j] = inlist[i][j]
+        return POINTER(c_float)(mem)
 
 class MATGEN:
     def __init__(self) -> None:

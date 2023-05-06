@@ -12,32 +12,9 @@ class utils:
         result = data_transfer.tolist(shape[0], shape[1] ,result)
         return result
     # same with turning list to pointers
-    def toPointer(data, dtype):
-        if dtype == 'double':
-            if type(data[0]) == list:
-                mem = (c_double*len(data[0])*len(data))()
-                for i in range(len(data)):
-                    for j in range(len(data[0])):
-                        mem[i][j] = data[i][j]
-                pointers = POINTER(c_double)(mem)
-            else:
-                mem = (c_double*len(data))()
-                for i in range(len(data)):
-                    mem[i] = data[i]
-                pointers = POINTER(c_double)(mem)
-        elif dtype == 'float':
-            if type(data[0]) == list:
-                mem = (c_float*len(data[0])*len(data))()
-                for i in range(len(data)):
-                    for j in range(len(data[0])):
-                        mem[i][j] = data[i][j]
-                pointers = POINTER(c_float)(mem)
-            else:
-                mem = (c_float*len(data))()
-                for i in range(len(data)):
-                    mem[i] = data[i]
-                pointers = POINTER(c_float)(mem)
-        return pointers
+    def toPointer(data: list, dtype):
+        if isinstance(data[0], list):return ALLType.ArrayDict[dtype]['2d'](data)
+        else:return ALLType.ArrayDict[dtype]['1d'](data)
 
 class matrix:
     def __init__(self, data, dtype):
