@@ -1,45 +1,42 @@
 from setuptools import setup, Extension
-import setuptools
-import subprocess
 import os
-
 # setup extension
-
-
-def matgen_lib():
-    path = os.getcwd() + '/NaN/NaN/src/'
-    subprocess.run(['make', '-C', path])
-
-
-
 def NaN_setup():
-    path = os.getcwd() + '/NaN/utils/'
-    extra_compile_args = ['-std=c99', '-O3',
+    utils_path = os.getcwd() + '/NaN/utils/'
+    src_path = os.getcwd() + '/NaN/src/'
+
+    compile_arg1 = ['-std=c99', '-O3',
                         '-Wall', '-Wextra',
                         '-Wno-unused-parameter', 
                         '-Wno-unused-function', 
                         '-Wno-unused-variable', 
                         '-Wno-unused-but-set-variabl']
     
-    module = Extension('data_transfer',
-                        sources=[path+'data_transfer.c'],
-                        extra_compile_args=extra_compile_args)
+    #compile_arg2 = ['-lpthread', '-std=gnu99', '-O2', '-Wall', '-lm'
+    #                ,'-dynamiclib']
+    
+    module1 = Extension('data_transfer',
+                        sources=[utils_path+'data_transfer.c'],
+                        extra_compile_args=compile_arg1)
+    
+    #module2 = Extension('mat_gen',
+    #                    sources=[src_path+'mat_gen.c'],
+    #                    include_dirs=[src_path],
+    #                    extra_compile_args=compile_arg2)
 
     setup(name='NaN',
-        version='0.0.1',
+        version='1.0',
         description='A simple and fast matrix library',
         author='Jiexiang Liu',
         license='MIT',
-        packages=setuptools.find_packages(),
-        install_requires=['pylib-openblas', 'colorama', 'numpy'],
+        install_requires=['pylib-openblas', 'colorama'],
         python_requires='>=3.8',
+        ext_modules=[module1],
         extras_require={
             'testing': ['numpy'],
-        },
-        ext_modules=[module],)
+        },)
 
 
 
 if __name__ == "__main__":
-    matgen_lib()
     NaN_setup()
