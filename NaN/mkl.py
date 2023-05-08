@@ -12,7 +12,7 @@ class MemOps:
         pass
     
     def _dcopy(A, shape):
-        B = (ctypes.c_double*shape[0]*shape[1])()
+        B = (ctypes.c_double*(shape[0]*shape[1]))()
         B = ctypes.POINTER(ctypes.c_double)(B)
         cblas_lib.cblas_dcopy.argtypes = [ctypes.c_int, ctypes.POINTER(ctypes.c_double), ctypes.c_int, ctypes.POINTER(ctypes.c_double), ctypes.c_int]
         cblas_lib.cblas_dcopy.restype = None
@@ -20,7 +20,7 @@ class MemOps:
         return B
 
     def _scopy(A, shape):
-        B = (ctypes.c_float*shape[0]*shape[1])()
+        B = (ctypes.c_float*(shape[0]*shape[1]))()
         B = ctypes.POINTER(ctypes.c_float)(B)
         cblas_lib.cblas_scopy.argtypes = [ctypes.c_int, ctypes.POINTER(ctypes.c_float), ctypes.c_int, ctypes.POINTER(ctypes.c_float), ctypes.c_int]
         cblas_lib.cblas_scopy.restype = None
@@ -36,7 +36,7 @@ class CBLAS:
 
     def _dgemm(A, B, Ashape, Bshape):
         out_dim = (Ashape[0], Bshape[1])
-        C = (ctypes.c_double*out_dim[0]*out_dim[1])()
+        C = (ctypes.c_double*(out_dim[0]*out_dim[1]))()
         C = ctypes.POINTER(ctypes.c_double)(C)
         cblas_lib.cblas_dgemm.argtypes = [ctypes.c_int, ctypes.c_int, ctypes.c_int, ctypes.c_int, 
                                         ctypes.c_int, ctypes.c_int, ctypes.c_double, ctypes.POINTER(ctypes.c_double),
@@ -48,7 +48,7 @@ class CBLAS:
 
     def _sgemm(A, B, Ashape, Bshape):
         out_dim = (Ashape[0], Bshape[1])
-        C = (ctypes.c_float*out_dim[0]*out_dim[1])()
+        C = (ctypes.c_float*(out_dim[0]*out_dim[1]))()
         C = ctypes.POINTER(ctypes.c_float)(C)
         cblas_lib.cblas_sgemm.argtypes = [ctypes.c_int, ctypes.c_int, ctypes.c_int, ctypes.c_int, 
                                         ctypes.c_int, ctypes.c_int, ctypes.c_float, ctypes.POINTER(ctypes.c_float),
