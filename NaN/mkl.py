@@ -6,10 +6,17 @@ cblas = ctypes.util.find_library('blas')
 # load CBLAS
 cblas_lib = ctypes.cdll.LoadLibrary(cblas)
 
+# find LAPACK
+lapack = ctypes.util.find_library('lapack')
+lp_lib = ctypes.cdll.LoadLibrary(lapack)
+print(lp_lib)
+
 
 class MemOps:
     def __init__(self) -> None:
         pass
+
+    
     
     def _dcopy(A, shape):
         B = (ctypes.c_double*(shape[0]*shape[1]))()
@@ -92,6 +99,40 @@ class CBLAS:
         return C
 
 
-# LEVEL2 BLAS
-
-# LEVEL3 BLAS
+#LAPACK routines
+class LAPACK:
+    def __init__(self) -> None:
+        pass
+    # convert to upper Hessenberg form
+    def _dgehrd(A, shape):
+        out = MemOps._dcopy(A, shape)
+        tau = ctypes.POINTER(ctypes.c_double)((ctypes.c_double*(shape[0]-1))())
+        lp_lib.LAPACKE_dgehrd.argtypes = [ctypes.c_int, ctypes.c_int, ctypes.c_int, ctypes.c_int,
+                                          ctypes.POINTER(ctypes.c_double), ctypes.c_int, ctypes.POINTER(ctypes.c_double)]                                         
+        info = lp_lib.LAPACKE_dgehrd(101, shape[0], 1, shape[0], out, shape[1], tau)
+        if info != 0:
+            raise Exception("LAPACKE_dgehrd failed with error code {}".format(info))
+        return out, tau
+    
+    # generate orthogonal matrix from Hessenberg form
+    def _dorghr(A, tau, shape):
+        out = MemOps._dcopy(A, shape)
+        lp_lib.LAPACKE_dorghr.argtypes = [ctypes.c_int, ctypes.c_int, ctypes.c_int, ctypes.c_int,
+                                          ctypes.POINTER(ctypes.c_double), ctypes.c_int, ctypes.POINTER(ctypes.c_double)]
+        info = lp_lib.LAPACKE_dorghr(101, shape[0], 1, shape[0], out, shape[1], tau)
+        if info != 0:
+            raise Exception("LAPACKE_dorghr failed with error code {}".format(info))
+        return out
+    
+    # computes all eigenvalues of upper Hessenberg matrix
+    def _dhseqr(A, tau, shape):
+        out = MemOps._dcopy(A, shape)
+        wr = (ctypes.c_double*(shape[0]))()
+        wi = (ctypes.c_double*(shape[0]))()
+        lp_lib.LAPACKE_dhseqr.argtypes = [ctypes.c_int, ctypes.c_int, ctypes.c_int, ctypes.c_int,
+                                          ctypes.POINTER(ctypes.c_double), ctypes.c_int, ctypes.POINTER(ctypes.c_double),
+                                          ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double)]
+        info = lp_lib.LAPACKE_dhseqr(101, 111, 111, shape[0], out, shape[1], wr, wi, tau)
+        if info != 0:
+            raise Exception("LAPACKE_dhseqr failed with error code {}".format(info))
+        return out, wr, wi
