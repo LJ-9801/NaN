@@ -19,7 +19,7 @@ in the near future. Rigth now the following kernels are available.
 1. Right now it only support Unix-like OS
 
 ## Installation
-1. run "bash setup.sh" to install the library
+1. run "pip install ." to install the library
 
 ## TODO
 1. dynamic typing
