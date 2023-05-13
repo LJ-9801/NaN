@@ -16,7 +16,7 @@ in the near future. Rigth now the following kernels are available.
 1. add/substract
 2. matmul
 
-## Requirements(For Now)
+## Requirements
 1. have python the pip install
 
 ## Installation
