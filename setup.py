@@ -4,18 +4,16 @@ import os
 # setup extension
 def NaN_setup():
     utils_path = os.getcwd() + '/NaN/utils/'
-
-    compile_arg1 = ['-O3']
-
     module1 = Extension('repr',
                         language='c++',
                         sources=[utils_path+'repr.pyx'],
-                        extra_compile_args=compile_arg1)
+                        extra_compile_args=['-O3'])
     
     module2 = Extension('matgen',
+                        language='c++',
                         sources=[utils_path+'matgen.pyx'],
                         extra_compile_args=['-fopenmp', '-O3'],
-                        extra_link_args=['-fopenmp'])
+                        extra_link_args=['-fopenmp', '-std=c++11'])
     
 
     setup(name='NaN',

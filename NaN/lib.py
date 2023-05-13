@@ -3,6 +3,15 @@ from ctypes import *
 from NaN.type import ALLType
 
 class matGen:
+    def rand(size, length, dtype = 'float'):
+        if type(size) != tuple:
+            raise TypeError('Invalid data type, size input must be of type tuple')
+        if type(length) != tuple:
+            raise TypeError('Invalid data type, range input must be of type tuple')
+        func = ALLType.MatGenDict['rand'][dtype]
+        A = func(size, length)
+        return matrix(A, dtype)
+
     def randn(size, length, dtype = 'float'):
         if type(size) != tuple:
             raise TypeError('Invalid data type, size input must be of type tuple')

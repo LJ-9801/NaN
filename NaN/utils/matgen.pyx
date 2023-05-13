@@ -1,4 +1,3 @@
-from cython.parallel import prange
 from libc.math cimport sin, cos
 from libc.stdlib cimport malloc, rand, RAND_MAX, free
 from libc.time cimport time
@@ -6,26 +5,68 @@ from libc.stdio cimport printf
 from ctypes import *
 
 
-def drandn(int m, int n, double r1, double r2):
+cdef extern from "<random>" namespace "std":
+    cdef cppclass mt19937:
+        mt19937()
+        mt19937(unsigned int seed)
+    
+    cdef cppclass uniform_real_distribution[T]:
+        uniform_real_distribution()
+        uniform_real_distribution(T a, T b)
+        T operator()(mt19937 gen)
+
+    cdef cppclass uniform_int_distribution[T]:
+        uniform_int_distribution()
+        uniform_int_distribution(T a, T b)
+        T operator()(mt19937 gen)
+    
+    cdef cppclass normal_distribution[T]:
+        normal_distribution()
+        normal_distribution(T mean, T stddev)
+        T operator()(mt19937 gen)
+        
+
+def duniform(int m, int n, double a, double b):
+    cdef mt19937 gen = mt19937(int(time(NULL)))
+    cdef uniform_real_distribution[double] distribution = uniform_real_distribution[double](a, b)
+
     buff = (c_double*(m*n))()
     cdef int i
     for i in range(m * n):
-        buff[i] = r1 + r2 * (2.0 * rand() / RAND_MAX - 1.0)
+        buff[i] = distribution(gen)
     return buff
 
-'''
-def drandn(int m, int n, double r1, double r2):
-    out = (c_double*(m*n))()
-    out = POINTER(c_double)(out)
-    cdrandn(m,n,r1,r2,out)
-    return out
-'''
 
-def srandn(int m, int n, float r1, float r2):
+def suniform(int m, int n, float a, float b):
+    cdef mt19937 gen = mt19937(int(time(NULL)))
+    cdef uniform_real_distribution[float] distribution = uniform_real_distribution[float](a, b)
+
     buff = (c_float*(m*n))()
     cdef int i
     for i in range(m * n):
-        buff[i] = r1 + r2 * (2.0 * rand() / RAND_MAX - 1.0)
+        buff[i] = distribution(gen)
+    return buff
+
+
+def drandn(int m, int n, double mean, double dev):
+    cdef mt19937 gen = mt19937(int(time(NULL)))
+    cdef normal_distribution[double] distribution = normal_distribution[double](mean, dev)
+
+    buff = (c_double*(m*n))()
+    cdef int i
+    for i in range(m * n):
+        buff[i] = distribution(gen)
+    return buff
+
+
+def srandn(int m, int n, float mean, float dev):
+    cdef mt19937 gen = mt19937(int(time(NULL)))
+    cdef normal_distribution[float] distribution = normal_distribution[float](mean, dev)
+
+    buff = (c_float*(m*n))()
+    cdef int i
+    for i in range(m * n):
+        buff[i] = distribution(gen)
     return buff
 
 def dzeros(int m, int n):
@@ -39,21 +80,19 @@ def szeros(int m, int n):
 def deye(int size):
     buff = (c_double*(size*size))()
     cdef int i
+    cdef double one = 1.0
     for i in range(size*size):
         if i % (size + 1) == 0:
-            buff[i] = 1.0
-        else:
-            buff[i] = 0.0
+            buff[i] = one
     return buff
 
 def seye(int size):
     buff = (c_float*(size*size))()
     cdef int i
+    cdef float one = 1.0
     for i in range(size*size):
         if i % (size + 1) == 0:
-            buff[i] = 1.0
-        else:
-            buff[i] = 0.0
+            buff[i] = one
     return buff
 
 def drot2(double angle):

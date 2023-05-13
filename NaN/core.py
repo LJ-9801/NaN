@@ -48,6 +48,16 @@ class cArray:
 class MATGEN:
     def __init__(self) -> None:
         pass
+
+    def _drand(size, length):
+        out = matgen.duniform(int(size[0]), int(size[1]), length[0], length[1])
+        ap = POINTER(c_double)(out)
+        return object(ap, size, 'double')
+    
+    def _srand(size, length):
+        out = matgen.suniform(int(size[0]), int(size[1]), length[0], length[1])
+        ap = POINTER(c_float)(out)
+        return object(ap, size, 'float')
     
     def _drandn(size, length):
         out = matgen.drandn(int(size[0]), int(size[1]), length[0], length[1])

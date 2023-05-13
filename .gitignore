@@ -6,7 +6,7 @@ __pycache__/
 
 NaN/src/build/
 
-NaN/utils/matgen.c
+NaN/utils/matgen.cpp
 NaN/utils/repr.cpp
 
 NaN/utils/utils_lib.egg-info/

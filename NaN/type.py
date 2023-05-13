@@ -13,6 +13,7 @@ class ALLType:
             'bool': c_bool}
 
         MatGenDict = {'randn': {'double': MATGEN._drandn, 'float': MATGEN._srandn},
+            'rand': {'double': MATGEN._drand, 'float': MATGEN._srand},
             'zeros': {'double': MATGEN._dzeros, 'float': MATGEN._szeros},
             'eye': {'double': MATGEN._deye, 'float': MATGEN._seye},
             'rot2': {'double': MATGEN._drot2, 'float': MATGEN._srot2},
