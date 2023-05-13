@@ -72,10 +72,6 @@ class matrix:
         C = func(A,B,self.shape)
         return matrix(object(C, self.shape, self.dtype), self.dtype)
     
-    #def __str__(self):
-    #    #this will realize the matrix from the pointers
-    #    return str(utils.toList(self.core.data, self.shape))
-    
     def __getitem__(self, index):
         if isinstance(index, tuple) and isinstance(index[0], int) and isinstance(index[1], int):
             ret = ALLType.MemOpsDict['copy'][self.dtype](self.core.data[index[0] + index[1]*self.shape[0]], (1,1))
