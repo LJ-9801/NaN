@@ -22,8 +22,8 @@ in the near future. Rigth now the following kernels are available.
 1. run "bash setup.sh" to install the library
 
 ## TODO
-1. create Mat Gen cpython module
-2. dynamic typing
+1. dynamic typing
+2. random number generator
 3. GPU support
 
 ## Kernels To Be Implemented
