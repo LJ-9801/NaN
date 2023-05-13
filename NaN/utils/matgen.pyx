@@ -25,6 +25,15 @@ cdef extern from "<random>" namespace "std":
         normal_distribution(T mean, T stddev)
         T operator()(mt19937 gen)
         
+def uniform_int(int m, int n, int a, int b):
+    cdef mt19937 gen = mt19937(int(time(NULL)))
+    cdef uniform_int_distribution[int] distribution = uniform_int_distribution[int](a, b)
+
+    buff = (c_float*(m*n))()
+    cdef int i
+    for i in range(m * n):
+        buff[i] = distribution(gen)
+    return buff
 
 def duniform(int m, int n, double a, double b):
     cdef mt19937 gen = mt19937(int(time(NULL)))
@@ -51,7 +60,6 @@ def suniform(int m, int n, float a, float b):
 def drandn(int m, int n, double mean, double dev):
     cdef mt19937 gen = mt19937(int(time(NULL)))
     cdef normal_distribution[double] distribution = normal_distribution[double](mean, dev)
-
     buff = (c_double*(m*n))()
     cdef int i
     for i in range(m * n):
