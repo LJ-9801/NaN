@@ -24,6 +24,7 @@ in the near future. Rigth now the following kernels are available.
 
 ## TODO
 1. dynamic typing
+2. transpose
 2. GPU support
 
 ## Kernels To Be Implemented
