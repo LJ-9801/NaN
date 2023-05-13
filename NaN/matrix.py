@@ -25,6 +25,9 @@ class matrix:
             self.shape = data.shape
             self.data = data.data
 
+    def T(self):
+        pass
+
     def copy(self):
         ret = ALLType.MemOpsDict['copy'][self.dtype](self.data, self.shape)
         return matrix(object(ret, self.shape, self.dtype), self.dtype)
