@@ -60,6 +60,7 @@ class CBLAS:
     
     def _dadd(A, B, shape):
         C = MemOps._dcopy(B, shape)
+        
         cblas_lib.cblas_daxpy.argtypes = [ctypes.c_int, ctypes.c_double, ctypes.POINTER(ctypes.c_double), ctypes.c_int,
                                           ctypes.POINTER(ctypes.c_double), ctypes.c_int]
         cblas_lib.cblas_daxpy.restype = None

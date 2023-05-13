@@ -1,16 +1,11 @@
 from ctypes import *
-import data_transfer
 from NaN.core import object
 from NaN.type import ALLType
-from NaN.mkl import MemOps
+import repr
 
 
 class utils:
     # use pyobject in c++ to turn pointers to list
-    def toList(data, shape):
-        result = data[:shape[0]*shape[1]]
-        result = data_transfer.tolist(shape[0], shape[1] ,result)
-        return result
     # same with turning list to pointers
     def toPointer(data: list, dtype):
         if isinstance(data[0], list):return ALLType.ArrayDict[dtype]['2d'](data)
@@ -33,7 +28,9 @@ class matrix:
     def copy(self):
         ret = ALLType.MemOpsDict['copy'][self.dtype](self.data, self.shape)
         return matrix(object(ret, self.shape, self.dtype), self.dtype)
-
+    
+    def __repr__(self) -> str:
+        return str(repr.tostr(self.core.data, self.shape[0], self.shape[1]).decode('utf-8'))
     
     def __mul__(self, other):
         out_dim = (self.shape[0], other.shape[1])
@@ -75,9 +72,9 @@ class matrix:
         C = func(A,B,self.shape)
         return matrix(object(C, self.shape, self.dtype), self.dtype)
     
-    def __str__(self):
-        #this will realize the matrix from the pointers
-        return str(utils.toList(self.core.data, self.shape))
+    #def __str__(self):
+    #    #this will realize the matrix from the pointers
+    #    return str(utils.toList(self.core.data, self.shape))
     
     def __getitem__(self, index):
         if isinstance(index, tuple) and isinstance(index[0], int) and isinstance(index[1], int):

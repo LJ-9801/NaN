@@ -1,10 +1,5 @@
 from ctypes import *
-import ctypes.util
-import os
-
-curr_dir = os.getcwd()
-path = os.path.join(curr_dir, 'NaN/src/build/mat_gen.dylib')
-lib = cdll.LoadLibrary(path)
+import matgen
 
 
 class object:
@@ -55,72 +50,52 @@ class MATGEN:
         pass
     
     def _drandn(size, length):
-        ap = (c_double*(size[0]*size[1]))()
-        lib.drandfill.argtypes = [c_int, c_double, c_double, c_double*(size[0]*size[1])]
-        lib.drandfill(size[0]*size[1], length[0], length[1], ap)
-        ap = POINTER(c_double)(ap)
+        out = matgen.drandn(int(size[0]), int(size[1]), length[0], length[1])
+        ap = POINTER(c_double)(out)
         return object(ap, size, 'double')
 
     def _srandn(size, length):
-        ap = (c_float*(size[0]*size[1]))()
-        lib.srandfill.argtypes = [c_int, c_float, c_float, c_float*(size[0]*size[1])]
-        lib.srandfill(size[0]*size[1], length[0], length[1], ap)
-        ap = POINTER(c_float)(ap)
+        out = matgen.srandn(int(size[0]), int(size[1]), length[0], length[1])
+        ap = POINTER(c_float)(out)
         return object(ap, size, 'float')
     
     def _dzeros(size):
-        ap = (c_double*(size[0]*size[1]))()
-        lib.dzeros.argtypes = [c_int, c_int, c_double*(size[0]*size[1])]
-        lib.dzeros(size[0], size[1], ap)
-        ap = POINTER(c_double)(ap)
+        out = matgen.dzeros(int(size[0]), int(size[1]))
+        ap = POINTER(c_double)(out)
         return object(ap, size, 'double')
     
     def _szeros(size):
-        ap = (c_float*(size[0]*size[1]))()
-        lib.szeros.argtypes = [c_int, c_int, c_float*(size[0]*size[1])]
-        lib.szeros(size[0], size[1], ap)
-        ap = POINTER(c_float)(ap)
+        out = matgen.szeros(int(size), int(size[1]))
+        ap = POINTER(c_float)(out)
         return object(ap, size, 'float')
     
     def _deye(size):
-        ap = (c_double*(size*size))()
-        lib.deye.argtypes = [c_int, c_double*(size*size)]
-        lib.deye(size, ap)
-        ap = POINTER(c_double)(ap)
+        out = matgen.deye(int(size))
+        ap = POINTER(c_double)(out)
         return object(ap, (size,size), 'double')
     
     def _seye(size):
-        ap = (c_float*(size*size))()
-        lib.seye.argtypes = [c_int, c_float*(size*size)]
-        lib.seye(size, ap)
-        ap = POINTER(c_float)(ap)
+        out = matgen.seye(int(size))
+        ap = POINTER(c_float)(out)
         return object(ap, (size,size), 'float')
     
     def _drot2(angle):
-        trans = (c_double*4)()
-        lib.drot2.argtypes = [c_double*4, c_double]
-        lib.drot2(trans, angle)  
-        trans = POINTER(c_double)(trans)
+        out = matgen.drot2(angle)
+        trans = POINTER(c_double)(out)
         return object(trans, (2, 2), 'double')
     
     def _srot2(angle):
-        trans = (c_float*4)()
-        lib.srot2.argtypes = [c_float*4, c_float]
-        lib.srot2(trans, angle)  
-        trans = POINTER(c_float)(trans)
+        out = matgen.srot2(angle)
+        trans = POINTER(c_float)(out)
         return object(trans, (2, 2), 'float')
     
     def _drot3(angle, axis):
-        trans = (c_double*9)()
-        lib.drot3.argtypes = [c_double*9, c_double, c_int]
-        lib.drot3(trans, angle, axis)
-        trans = POINTER(c_double)(trans)
+        out = matgen.drot3(angle, int(axis))
+        trans = POINTER(c_double)(out)
         return object(trans, (3, 3), 'double')
     
     def _srot3(angle, axis):
-        trans = (c_float*9)()
-        lib.srot3.argtypes = [c_float*9, c_float, c_int]
-        lib.srot3(trans, angle, axis)
-        trans = POINTER(c_float)(trans)
+        out = matgen.srot3(angle, int(axis))
+        trans = POINTER(c_float)(out)
         return object(trans, (3, 3), 'float')
         

@@ -1,7 +1,5 @@
 from NaN.lib import matGen as mg
 from NaN.matrix import matrix
-from NaN.matrix import utils
-
 from colorama import Fore
 import numpy as np
 import time
@@ -41,10 +39,11 @@ print("Testing rotation matrix generation and operations")
 r = mg.rot2(45)
 i = mg.randn((2, 1), (0, 1), 'float')
 out = r*i
-Rn = np.array(utils.toList(r.data, (2,2)), dtype=np.float64)
-In = np.array(utils.toList(i.data, (2,1)), dtype=np.float64)
+Rn = np.ctypeslib.as_array(r.data, (2,2))
+In = np.ctypeslib.as_array(i.data, (2,1))
+out = np.ctypeslib.as_array(out.data, (2,1))
 outn = Rn @ In
-print(success if np.allclose(utils.toList(out.data, (2,1)), outn) else fail)
+print(success if np.allclose(out, outn) else fail)
 print('-' * 50)
 # ===================================================================
 print('Testing other matrix generation')
@@ -52,21 +51,21 @@ print('-' * 50)
 # testing zeros
 print('Testing zeros')
 z = mg.zeros((N, N), 'double')
-print(success if np.allclose(utils.toList(z.data, (N,N)), np.zeros((N, N))) else fail)
+zn = np.ctypeslib.as_array(z.data, (N,N))
+print(success if np.allclose(zn, np.zeros((N, N))) else fail)
 print('Testing eye')
 identity = mg.eye(N, 'double')
-identity = utils.toList(identity.data, (N,N))
-print(success if np.allclose(identity, np.eye(N)) else fail)
-
+identity = np.ctypeslib.as_array(identity.data, (N,N))
+print(success if identity.all()==np.eye(N).all() else fail)
 print("Testing Non-Squared matrix multiplication")
 N1 = 100
 N2 = 200
 a = mg.randn((N1,N2), (0,1), 'double')
 b = mg.randn((N2,N1), (0,1), 'double')
 c = a*b*a
-a = utils.toList(a.data, (N1,N2))
-b = utils.toList(b.data, (N2,N1))
-c = utils.toList(c.data, (N1,N2))
+a = np.ctypeslib.as_array(a.data, (N1,N2))
+b = np.ctypeslib.as_array(b.data, (N2,N1))
+c = np.ctypeslib.as_array(c.data, (N1,N2))
 an = np.array(a)
 bn = np.array(b)
 cn = an @ bn @ an
@@ -75,9 +74,9 @@ print("Testing float type matrices operation")
 a = mg.randn((N1,N2), (0,1), 'float')
 b = mg.randn((N2,N1), (0,1), 'float')
 c = a*b
-a = utils.toList(a.data, (N1,N2))
-b = utils.toList(b.data, (N2,N1))
-c = utils.toList(c.data, (N1,N1))
+a = np.ctypeslib.as_array(a.data, (N1,N2))
+b = np.ctypeslib.as_array(b.data, (N2,N1))
+c = np.ctypeslib.as_array(c.data, (N1,N1))
 an = np.array(a)
 bn = np.array(b)
 cn = an @ bn

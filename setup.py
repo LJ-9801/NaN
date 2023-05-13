@@ -1,37 +1,33 @@
-from setuptools import setup, Extension
+from setuptools import setup, Extension, find_packages
+from Cython.Build import cythonize
 import os
 # setup extension
 def NaN_setup():
     utils_path = os.getcwd() + '/NaN/utils/'
-    src_path = os.getcwd() + '/NaN/src/'
 
-    compile_arg1 = ['-std=c99', '-O3',
-                        '-Wall', '-Wextra',
-                        '-Wno-unused-parameter', 
-                        '-Wno-unused-function', 
-                        '-Wno-unused-variable', 
-                        '-Wno-unused-but-set-variabl']
-    
-    #compile_arg2 = ['-lpthread', '-std=gnu99', '-O2', '-Wall', '-lm'
-    #                ,'-dynamiclib']
-    
-    module1 = Extension('data_transfer',
-                        sources=[utils_path+'data_transfer.c'],
+    compile_arg1 = ['-O3']
+
+    module1 = Extension('repr',
+                        language='c++',
+                        sources=[utils_path+'repr.pyx'],
                         extra_compile_args=compile_arg1)
     
-    #module2 = Extension('mat_gen',
-    #                    sources=[src_path+'mat_gen.c'],
-    #                    include_dirs=[src_path],
-    #                    extra_compile_args=compile_arg2)
+    module2 = Extension('matgen',
+                        sources=[utils_path+'matgen.pyx'],
+                        extra_compile_args=['-fopenmp', '-O3'],
+                        extra_link_args=['-fopenmp'])
+    
 
     setup(name='NaN',
         version='1.0',
-        description='A simple and fast matrix library',
+        description='A lightweight and fast matrix library',
         author='Jiexiang Liu',
         license='MIT',
-        install_requires=['pylib-openblas', 'colorama'],
+        packages=find_packages(),
+        install_requires=['pylib-openblas', 'colorama', 'cython'],
         python_requires='>=3.8',
-        ext_modules=[module1],
+        ext_modules=cythonize([module1,module2]),
+        zip_safe=False,
         extras_require={
             'testing': ['numpy'],
         },)
