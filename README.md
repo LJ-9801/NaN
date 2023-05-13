@@ -7,24 +7,24 @@ in the near future. Rigth now the following kernels are available.
 ### matrix generation kernels
 1. eye
 2. zeros
-3. randn
-4. rot2
-5. rot3
+3. randn(normal distribution)
+4. rand(uniform distribution)
+5. rot2
+6. rot3
 
 ### matrix math kernels
 1. add/substract
 2. matmul
 
 ## Requirements(For Now)
-1. Right now it only support Unix-like OS
+1. have python the pip install
 
 ## Installation
 1. run "pip install ." to install the library
 
 ## TODO
 1. dynamic typing
-2. random number generator
-3. GPU support
+2. GPU support
 
 ## Kernels To Be Implemented
 1. matrix factorization
