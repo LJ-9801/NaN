@@ -63,14 +63,17 @@ class ops(matrix):
         func = ALLType.LapackDict['eig'][in_matrix.dtype]
         eigval, ev = func(in_matrix.core.data, in_matrix.shape)
         return matrix(object(eigval, in_matrix.shape, in_matrix.dtype), in_matrix.dtype), matrix(object(ev, in_matrix.shape, in_matrix.dtype), in_matrix.dtype)
-
-    def transpose(in_matrix: matrix):
+    
+    def lu(in_matrix: matrix):
         return None
 
-    def det(in_matrix: matrix):
+    def qr(in_matrix: matrix):
         return None
 
     def svd(in_matrix: matrix):
+        return None
+
+    def chol(in_matrix: matrix):
         return None
     
     def inv(in_matrix: matrix):
