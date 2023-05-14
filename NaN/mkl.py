@@ -136,3 +136,41 @@ class LAPACK:
         if info != 0:
             raise Exception("LAPACKE_dhseqr failed with error code {}".format(info))
         return out, wr, wi
+    
+    def _deig(A, shape):
+        out = MemOps._dcopy(A, shape)
+        wr = (ctypes.c_double*(shape[0]))()
+        wi = (ctypes.c_double*(shape[0]))()
+        jobvl = ctypes.c_char(b'N')
+        jobvr = ctypes.c_char(b'V')
+        vl = (ctypes.c_double*(shape[0]*shape[0]))()
+        vr = (ctypes.c_double*(shape[0]*shape[0]))()
+        lp_lib.LAPACKE_dgeev.argtypes = [ctypes.c_int, ctypes.c_char, ctypes.c_char, ctypes.c_int,
+                                         ctypes.POINTER(ctypes.c_double), ctypes.c_int, ctypes.POINTER(ctypes.c_double),
+                                         ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double), ctypes.c_int,
+                                         ctypes.POINTER(ctypes.c_double), ctypes.c_int]
+        info = lp_lib.LAPACKE_dgeev(101, jobvl, jobvr, shape[0], out, shape[1], wr, wi, vl, shape[0], vr, shape[0])
+        if info != 0:
+            raise Exception("LAPACKE_dgeev failed with error code {}".format(info))
+        out = (ctypes.c_double*(shape[0]*shape[0]))()
+        for i in range(shape[0]): out[i*shape[0]+i] = wr[i]
+        return out, vr
+    
+    def _seig(A, shape):
+        out = MemOps._scopy(A, shape)
+        wr = (ctypes.c_float*(shape[0]))()
+        wi = (ctypes.c_float*(shape[0]))()
+        jobvl = ctypes.c_char(b'N')
+        jobvr = ctypes.c_char(b'V')
+        vl = (ctypes.c_float*(shape[0]*shape[0]))()
+        vr = (ctypes.c_float*(shape[0]*shape[0]))()
+        lp_lib.LAPACKE_sgeev.argtypes = [ctypes.c_int, ctypes.c_char, ctypes.c_char, ctypes.c_int,
+                                         ctypes.POINTER(ctypes.c_float), ctypes.c_int, ctypes.POINTER(ctypes.c_float),
+                                         ctypes.POINTER(ctypes.c_float), ctypes.POINTER(ctypes.c_float), ctypes.c_int,
+                                         ctypes.POINTER(ctypes.c_float), ctypes.c_int]
+        info = lp_lib.LAPACKE_sgeev(101, jobvl, jobvr, shape[0], out, shape[1], wr, wi, vl, shape[0], vr, shape[0])
+        if info != 0:
+            raise Exception("LAPACKE_sgeev failed with error code {}".format(info))
+        out = (ctypes.c_float*(shape[0]*shape[0]))()
+        for i in range(shape[0]): out[i*shape[0]+i] = wr[i]
+        return out, vr

@@ -1,6 +1,6 @@
 from ctypes import *
 from NaN.core import MATGEN
-from NaN.mkl import CBLAS, MemOps
+from NaN.mkl import CBLAS, MemOps, LAPACK
 from NaN.core import cArray
 
 class ALLType:
@@ -28,6 +28,9 @@ class ALLType:
 
         ArrayDict = {'double': {'1d': cArray.to_double_1dpointers, '2d': cArray.to_double_2dpointers},
                      'float':  {'1d': cArray.to_float_1dpointers, '2d': cArray.to_float_2dpointers}}
+        
+        LapackDict = {'eig': {'double': LAPACK._deig, 'float': LAPACK._seig},}
+        
         
     
     

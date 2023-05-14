@@ -1,4 +1,4 @@
-from NaN.matrix import matrix
+from NaN.matrix import matrix, object
 from ctypes import *
 from NaN.type import ALLType
 
@@ -58,7 +58,11 @@ class matGen:
 
 class ops(matrix):
     def eig(in_matrix: matrix):
-        return None
+        if in_matrix.dtype not in ALLType.TypeDict:
+            raise TypeError('Invalid data type')
+        func = ALLType.LapackDict['eig'][in_matrix.dtype]
+        eigval, ev = func(in_matrix.core.data, in_matrix.shape)
+        return matrix(object(eigval, in_matrix.shape, in_matrix.dtype), in_matrix.dtype), matrix(object(ev, in_matrix.shape, in_matrix.dtype), in_matrix.dtype)
 
     def transpose(in_matrix: matrix):
         return None
