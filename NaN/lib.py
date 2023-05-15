@@ -85,14 +85,20 @@ class ops(matrix):
         L, U = func(in_matrix.core.data, in_matrix.shape)
         return {matrix(object(L, in_matrix.shape, in_matrix.dtype), in_matrix.dtype),
                 matrix(object(U, in_matrix.shape, in_matrix.dtype), in_matrix.dtype)}
+    
+    def inv(in_matrix: matrix):
+        if in_matrix.dtype not in ALLType.TypeDict:
+            raise TypeError('Invalid data type')
+        if in_matrix.shape[0] != in_matrix.shape[1]:
+            raise TypeError('Non-square matrix cannot be inverted')
+        func = ALLType.LapackDict['inv'][in_matrix.dtype]
+        A = func(in_matrix.core.data, in_matrix.shape)
+        return matrix(object(A, in_matrix.shape, in_matrix.dtype), in_matrix.dtype)
 
     def qr(in_matrix: matrix):
         return None    
 
     def chol(in_matrix: matrix):
-        return None
-    
-    def inv(in_matrix: matrix):
         return None
 
     def pinv(in_matrix: matrix):

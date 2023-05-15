@@ -31,7 +31,8 @@ class ALLType:
         
         LapackDict = {'eig': {'double': LAPACK._deig, 'float': LAPACK._seig},
                       'svd': {'double': LAPACK._dsvd, 'float': LAPACK._ssvd},
-                      'lu': {'double': LAPACK._dlu, 'float': LAPACK._slu},}
+                      'lu': {'double': LAPACK._dlu, 'float': LAPACK._slu},
+                      'inv': {'double': LAPACK._dinv, 'float': LAPACK._sinv},}
         
         
     

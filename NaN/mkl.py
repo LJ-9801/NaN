@@ -232,6 +232,34 @@ class LAPACK:
             raise Exception("LAPACKE_sgetrf failed with error code {}".format(info))
         return out, ipiv
     
+    def _dgetri(A, ipiv, shape):
+        out = MemOps._dcopy(A, shape)
+        ipiv = (ctypes.c_int*(shape[0]))() if ipiv is None else ipiv
+        lp_lib.LAPACKE_dgetri.argtypes = [ctypes.c_int, ctypes.c_int, ctypes.POINTER(ctypes.c_double), ctypes.c_int, ctypes.POINTER(ctypes.c_int)]
+        info = lp_lib.LAPACKE_dgetri(101, shape[1], out, shape[1], ipiv)
+        if info != 0:
+            raise Exception("LAPACKE_dgetri failed with error code {}".format(info))
+        return out
+    
+    def _sgetri(A, ipiv, shape):
+        out = MemOps._scopy(A, shape)
+        ipiv = (ctypes.c_int*(shape[0]))() if ipiv is None else ipiv
+        lp_lib.LAPACKE_sgetri.argtypes = [ctypes.c_int, ctypes.c_int, ctypes.POINTER(ctypes.c_float), ctypes.c_int, ctypes.POINTER(ctypes.c_int)]
+        info = lp_lib.LAPACKE_sgetri(101, shape[1], out, shape[1], ipiv)
+        if info != 0:
+            raise Exception("LAPACKE_sgetri failed with error code {}".format(info))
+        return out
+    
+    def _dinv(A, shape):
+        out, ipiv = LAPACK._dgetrf(A, shape)
+        out = LAPACK._dgetri(out, ipiv, shape)
+        return out
+    
+    def _sinv(A, shape):
+        out, ipiv = LAPACK._sgetrf(A, shape)
+        out = LAPACK._sgetri(out, ipiv, shape)
+        return out
+    
     def _dlu(A, shape):
         out, ipiv = LAPACK._dgetrf(A, shape)
         upper = (ctypes.c_double*(shape[0]*shape[1]))()
@@ -252,12 +280,5 @@ class LAPACK:
             if i%shape[1] > i//shape[1]: upper[i] = out[i]
         return lower, upper
     
-    def _dgetri(A, shape):
-        out = MemOps._dcopy(A, shape)
-        ipiv = (ctypes.c_int*(shape[0]))()
-        lp_lib.LAPACKE_dgetri.argtypes = [ctypes.c_int, ctypes.POINTER(ctypes.c_double), ctypes.c_int, ctypes.POINTER(ctypes.c_int)]
-        info = lp_lib.LAPACKE_dgetri(101, out, shape[1], ipiv)
-        if info != 0:
-            raise Exception("LAPACKE_dgetri failed with error code {}".format(info))
-        return out
+    
 
