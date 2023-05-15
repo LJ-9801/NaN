@@ -174,3 +174,40 @@ class LAPACK:
         out = (ctypes.c_float*(shape[0]*shape[0]))()
         for i in range(shape[0]): out[i*shape[0]+i] = wr[i]
         return out, vr
+    
+    def _dsvd(A, shape):
+        aout = MemOps._dcopy(A, shape)
+        mind = min(shape[0], shape[1])
+        s = (ctypes.c_double*(mind))()
+        u = (ctypes.c_double*(shape[0]*shape[0]))()
+        vt = (ctypes.c_double*(shape[1]*shape[1]))()
+        superb = (ctypes.c_double*(mind-1))()
+        lp_lib.LAPACKE_dgesvd.argtypes = [ctypes.c_int, ctypes.c_char, ctypes.c_char, ctypes.c_int, ctypes.c_int,
+                                          ctypes.POINTER(ctypes.c_double), ctypes.c_int, ctypes.POINTER(ctypes.c_double),
+                                          ctypes.POINTER(ctypes.c_double), ctypes.c_int, ctypes.POINTER(ctypes.c_double),
+                                          ctypes.c_int, ctypes.c_int, ctypes.POINTER(ctypes.c_double)]
+        info = lp_lib.LAPACKE_dgesvd(101, b'A', b'A', shape[0], shape[1], aout, shape[1], s, u, shape[0], vt, shape[0], shape[0], superb)
+        if info != 0:
+            raise Exception("LAPACKE_dgesvd failed with error code {}".format(info))
+        sout = (ctypes.c_double*(shape[0]*shape[1]))()
+        for i in range(mind): sout[i*mind+i] = s[i]
+        return u, sout, vt
+    
+    def _ssvd(A, shape):
+        aout = MemOps._scopy(A, shape)
+        mind = min(shape[0], shape[1])
+        s = (ctypes.c_float*(mind))()
+        u = (ctypes.c_float*(shape[0]*shape[0]))()
+        vt = (ctypes.c_float*(shape[1]*shape[1]))()
+        superb = (ctypes.c_float*(mind-1))()
+        lp_lib.LAPACKE_sgesvd.argtypes = [ctypes.c_int, ctypes.c_char, ctypes.c_char, ctypes.c_int, ctypes.c_int,
+                                          ctypes.POINTER(ctypes.c_float), ctypes.c_int, ctypes.POINTER(ctypes.c_float),
+                                          ctypes.POINTER(ctypes.c_float), ctypes.c_int, ctypes.POINTER(ctypes.c_float),
+                                          ctypes.c_int, ctypes.c_int, ctypes.POINTER(ctypes.c_float)]
+        info = lp_lib.LAPACKE_sgesvd(101, b'A', b'A', shape[0], shape[1], aout, shape[1], s, u, shape[0], vt, shape[0], shape[0], superb)
+        if info != 0:
+            raise Exception("LAPACKE_sgesvd failed with error code {}".format(info))
+        sout = (ctypes.c_float*(shape[0]*shape[1]))()
+        for i in range(mind): sout[i*mind+i] = s[i]
+        return u, sout, vt
+

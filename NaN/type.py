@@ -29,7 +29,8 @@ class ALLType:
         ArrayDict = {'double': {'1d': cArray.to_double_1dpointers, '2d': cArray.to_double_2dpointers},
                      'float':  {'1d': cArray.to_float_1dpointers, '2d': cArray.to_float_2dpointers}}
         
-        LapackDict = {'eig': {'double': LAPACK._deig, 'float': LAPACK._seig},}
+        LapackDict = {'eig': {'double': LAPACK._deig, 'float': LAPACK._seig},
+                      'svd': {'double': LAPACK._dsvd, 'float': LAPACK._ssvd},}
         
         
     
