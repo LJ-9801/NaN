@@ -77,7 +77,14 @@ class ops(matrix):
                 matrix(object(V, (in_matrix.shape[1], in_matrix.shape[1]), in_matrix.dtype), in_matrix.dtype)}
     
     def lu(in_matrix: matrix):
-        return None
+        if in_matrix.dtype not in ALLType.TypeDict:
+            raise TypeError('Invalid data type')
+        if in_matrix.shape[0] != in_matrix.shape[1]:
+            raise TypeError('Non-square matrix cannot be LU decomposed')
+        func = ALLType.LapackDict['lu'][in_matrix.dtype]
+        L, U = func(in_matrix.core.data, in_matrix.shape)
+        return {matrix(object(L, in_matrix.shape, in_matrix.dtype), in_matrix.dtype),
+                matrix(object(U, in_matrix.shape, in_matrix.dtype), in_matrix.dtype)}
 
     def qr(in_matrix: matrix):
         return None    

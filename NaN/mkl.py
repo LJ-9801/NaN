@@ -210,4 +210,54 @@ class LAPACK:
         sout = (ctypes.c_float*(shape[0]*shape[1]))()
         for i in range(mind): sout[i*mind+i] = s[i]
         return u, sout, vt
+    
+    # LU decomposition
+    def _dgetrf(A, shape):
+        out = MemOps._dcopy(A, shape)
+        dmin = min(shape[0], shape[1])
+        ipiv = (ctypes.c_int*dmin)()
+        lp_lib.LAPACKE_dgetrf.argtypes = [ctypes.c_int, ctypes.c_int, ctypes.c_int, ctypes.POINTER(ctypes.c_double), ctypes.c_int, ctypes.POINTER(ctypes.c_int)]
+        info = lp_lib.LAPACKE_dgetrf(101, shape[0], shape[1], out, shape[1], ipiv)
+        if info != 0:
+            raise Exception("LAPACKE_dgetrf failed with error code {}".format(info))
+        return out, ipiv
+    
+    def _sgetrf(A, shape):
+        out = MemOps._scopy(A, shape)
+        dmin = min(shape[0], shape[1])
+        ipiv = (ctypes.c_int*dmin)()
+        lp_lib.LAPACKE_sgetrf.argtypes = [ctypes.c_int, ctypes.c_int, ctypes.c_int, ctypes.POINTER(ctypes.c_float), ctypes.c_int, ctypes.POINTER(ctypes.c_int)]
+        info = lp_lib.LAPACKE_sgetrf(101, shape[0], shape[1], out, shape[1], ipiv)
+        if info != 0:
+            raise Exception("LAPACKE_sgetrf failed with error code {}".format(info))
+        return out, ipiv
+    
+    def _dlu(A, shape):
+        out, ipiv = LAPACK._dgetrf(A, shape)
+        upper = (ctypes.c_double*(shape[0]*shape[1]))()
+        lower = (ctypes.c_double*(shape[0]*shape[1]))()
+        for i in range(shape[0]*shape[1]): 
+            if i%shape[1] <= i//shape[1]: lower[i] = out[i]
+            if i%shape[1] == i//shape[1]: upper[i] = 1.0
+            if i%shape[1] > i//shape[1]: upper[i] = out[i]
+        return lower, upper
+    
+    def _slu(A, shape):
+        out, ipiv = LAPACK._sgetrf(A, shape)
+        upper = (ctypes.c_float*(shape[0]*shape[1]))()
+        lower = (ctypes.c_float*(shape[0]*shape[1]))()
+        for i in range(shape[0]*shape[1]): 
+            if i%shape[1] <= i//shape[1]: lower[i] = out[i]
+            if int(i%shape[1]) == int(i//shape[1]): upper[i] = 1.0
+            if i%shape[1] > i//shape[1]: upper[i] = out[i]
+        return lower, upper
+    
+    def _dgetri(A, shape):
+        out = MemOps._dcopy(A, shape)
+        ipiv = (ctypes.c_int*(shape[0]))()
+        lp_lib.LAPACKE_dgetri.argtypes = [ctypes.c_int, ctypes.POINTER(ctypes.c_double), ctypes.c_int, ctypes.POINTER(ctypes.c_int)]
+        info = lp_lib.LAPACKE_dgetri(101, out, shape[1], ipiv)
+        if info != 0:
+            raise Exception("LAPACKE_dgetri failed with error code {}".format(info))
+        return out
 
