@@ -64,17 +64,14 @@ class ops(matrix):
             raise TypeError('Non-square matrix cannot be eigendecomposed')
         func = ALLType.LapackDict['eig'][in_matrix.dtype]
         eigval, ev = func(in_matrix.core.data, in_matrix.shape)
-        return {matrix(object(eigval, in_matrix.shape, in_matrix.dtype), in_matrix.dtype), 
-                matrix(object(ev, in_matrix.shape, in_matrix.dtype), in_matrix.dtype)}
+        return matrix(object(eigval, in_matrix.shape, in_matrix.dtype), in_matrix.dtype), matrix(object(ev, in_matrix.shape, in_matrix.dtype), in_matrix.dtype)
     
     def svd(in_matrix: matrix):
         if in_matrix.dtype not in ALLType.TypeDict:
             raise TypeError('Invalid data type')
         func = ALLType.LapackDict['svd'][in_matrix.dtype]
-        U, S, V = func(in_matrix.core.data, in_matrix.shape)
-        return {matrix(object(U, (in_matrix.shape[0], in_matrix.shape[0]), in_matrix.dtype), in_matrix.dtype),
-                matrix(object(S, in_matrix.shape, in_matrix.dtype), in_matrix.dtype),
-                matrix(object(V, (in_matrix.shape[1], in_matrix.shape[1]), in_matrix.dtype), in_matrix.dtype)}
+        U,S,V = func(in_matrix.core.data, in_matrix.shape, False)
+        return matrix(object(U, (in_matrix.shape[0], in_matrix.shape[0]), in_matrix.dtype), in_matrix.dtype), matrix(object(S, in_matrix.shape, in_matrix.dtype), in_matrix.dtype), matrix(object(V, (in_matrix.shape[1], in_matrix.shape[1]), in_matrix.dtype), in_matrix.dtype)
     
     def lu(in_matrix: matrix):
         if in_matrix.dtype not in ALLType.TypeDict:
@@ -83,8 +80,7 @@ class ops(matrix):
             raise TypeError('Non-square matrix cannot be LU decomposed')
         func = ALLType.LapackDict['lu'][in_matrix.dtype]
         L, U = func(in_matrix.core.data, in_matrix.shape)
-        return {matrix(object(L, in_matrix.shape, in_matrix.dtype), in_matrix.dtype),
-                matrix(object(U, in_matrix.shape, in_matrix.dtype), in_matrix.dtype)}
+        return matrix(object(L, in_matrix.shape, in_matrix.dtype), in_matrix.dtype),matrix(object(U, in_matrix.shape, in_matrix.dtype), in_matrix.dtype)
     
     def inv(in_matrix: matrix):
         if in_matrix.dtype not in ALLType.TypeDict:
@@ -94,6 +90,13 @@ class ops(matrix):
         func = ALLType.LapackDict['inv'][in_matrix.dtype]
         A = func(in_matrix.core.data, in_matrix.shape)
         return matrix(object(A, in_matrix.shape, in_matrix.dtype), in_matrix.dtype)
+    
+    def pinv(in_matrix: matrix):
+        if in_matrix.dtype not in ALLType.TypeDict:
+            raise TypeError('Invalid data type')
+        func = ALLType.LapackDict['pinv'][in_matrix.dtype]
+        A = func(in_matrix.core.data, in_matrix.shape)
+        return matrix(object(A, (in_matrix.shape[1], in_matrix.shape[0]), in_matrix.dtype), in_matrix.dtype)
 
     def qr(in_matrix: matrix):
         return None    
@@ -101,5 +104,4 @@ class ops(matrix):
     def chol(in_matrix: matrix):
         return None
 
-    def pinv(in_matrix: matrix):
-        return None
+    

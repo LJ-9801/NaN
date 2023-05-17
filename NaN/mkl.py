@@ -1,23 +1,20 @@
 import ctypes, ctypes.util
 import os
 
+
 # find CBLAS
 cblas = ctypes.util.find_library('blas')
-# load CBLAS
 cblas_lib = ctypes.cdll.LoadLibrary(cblas)
 
 # find LAPACK
 lapack = ctypes.util.find_library('lapack')
 lp_lib = ctypes.cdll.LoadLibrary(lapack)
-print(lp_lib)
 
 
 class MemOps:
     def __init__(self) -> None:
         pass
 
-    
-    
     def _dcopy(A, shape):
         B = (ctypes.c_double*(shape[0]*shape[1]))()
         B = ctypes.POINTER(ctypes.c_double)(B)
@@ -41,7 +38,19 @@ class CBLAS:
     def __init__(self) -> None:
         pass
 
-    def _dgemm(A, B, Ashape, Bshape):
+    def _dscal(A, shape, alpha, N):
+        cblas_lib.cblas_dscal.argtypes = [ctypes.c_int, ctypes.c_double, ctypes.POINTER(ctypes.c_double), ctypes.c_int]
+        cblas_lib.cblas_dscal.restype = None
+        cblas_lib.cblas_dscal(shape[0]*shape[1], alpha, A, N)
+        return A
+    
+    def _sscal(A, shape, alpha, N=1):
+        cblas_lib.cblas_sscal.argtypes = [ctypes.c_int, ctypes.c_float, ctypes.POINTER(ctypes.c_float), ctypes.c_int]
+        cblas_lib.cblas_sscal.restype = None
+        cblas_lib.cblas_sscal(shape[0]*shape[1], alpha, A, N)
+        return A
+
+    def _dgemm(A, B, Ashape, Bshape, Alayout=111, Blayout =111):
         out_dim = (Ashape[0], Bshape[1])
         C = (ctypes.c_double*(out_dim[0]*out_dim[1]))()
         C = ctypes.POINTER(ctypes.c_double)(C)
@@ -50,10 +59,10 @@ class CBLAS:
                                          ctypes.c_int, ctypes.POINTER(ctypes.c_double), ctypes.c_int, ctypes.c_double,
                                            ctypes.POINTER(ctypes.c_double), ctypes.c_int]
         cblas_lib.cblas_dgemm.restype = None  
-        cblas_lib.cblas_dgemm(101, 111, 111, Ashape[0], Bshape[1], Bshape[0], 1.0, A, Ashape[1], B, Bshape[1], 0.0, C, out_dim[1])
+        cblas_lib.cblas_dgemm(101, Alayout, Blayout, Ashape[0], Bshape[1], Ashape[1], 1.0, A, Ashape[1], B, Bshape[1], 0.0, C, out_dim[1])
         return C
 
-    def _sgemm(A, B, Ashape, Bshape):
+    def _sgemm(A, B, Ashape, Bshape, Alayout=111, Blayout =111):
         out_dim = (Ashape[0], Bshape[1])
         C = (ctypes.c_float*(out_dim[0]*out_dim[1]))()
         C = ctypes.POINTER(ctypes.c_float)(C)
@@ -62,7 +71,7 @@ class CBLAS:
                                          ctypes.c_int, ctypes.POINTER(ctypes.c_float), ctypes.c_int, ctypes.c_float,
                                            ctypes.POINTER(ctypes.c_float), ctypes.c_int]
         cblas_lib.cblas_sgemm.restype = None  
-        cblas_lib.cblas_sgemm(101, 111, 111, Ashape[0], Bshape[1], Bshape[0], 1.0, A, Ashape[1], B, Bshape[1], 0.0, C, out_dim[1])
+        cblas_lib.cblas_sgemm(101, Alayout, Blayout, Ashape[0], Bshape[1], Ashape[1], 1.0, A, Ashape[1], B, Bshape[1], 0.0, C, out_dim[1])
         return C
     
     def _dadd(A, B, shape):
@@ -175,9 +184,10 @@ class LAPACK:
         for i in range(shape[0]): out[i*shape[0]+i] = wr[i]
         return out, vr
     
-    def _dsvd(A, shape):
+    def _dsvd(A, shape, routine = False):
         aout = MemOps._dcopy(A, shape)
         mind = min(shape[0], shape[1])
+        maxd = max(shape[0], shape[1])
         s = (ctypes.c_double*(mind))()
         u = (ctypes.c_double*(shape[0]*shape[0]))()
         vt = (ctypes.c_double*(shape[1]*shape[1]))()
@@ -186,16 +196,19 @@ class LAPACK:
                                           ctypes.POINTER(ctypes.c_double), ctypes.c_int, ctypes.POINTER(ctypes.c_double),
                                           ctypes.POINTER(ctypes.c_double), ctypes.c_int, ctypes.POINTER(ctypes.c_double),
                                           ctypes.c_int, ctypes.c_int, ctypes.POINTER(ctypes.c_double)]
-        info = lp_lib.LAPACKE_dgesvd(101, b'A', b'A', shape[0], shape[1], aout, shape[1], s, u, shape[0], vt, shape[0], shape[0], superb)
+        info = lp_lib.LAPACKE_dgesvd(101, b'A', b'A', shape[0], shape[1], aout, shape[1], s, u, shape[0], vt, shape[1], shape[0], superb)
         if info != 0:
             raise Exception("LAPACKE_dgesvd failed with error code {}".format(info))
+        if routine is True: return u, s, vt
         sout = (ctypes.c_double*(shape[0]*shape[1]))()
         for i in range(mind): sout[i*mind+i] = s[i]
         return u, sout, vt
+        
     
-    def _ssvd(A, shape):
+    def _ssvd(A, shape, routine = False):
         aout = MemOps._scopy(A, shape)
         mind = min(shape[0], shape[1])
+        maxd = max(shape[0], shape[1])
         s = (ctypes.c_float*(mind))()
         u = (ctypes.c_float*(shape[0]*shape[0]))()
         vt = (ctypes.c_float*(shape[1]*shape[1]))()
@@ -204,9 +217,10 @@ class LAPACK:
                                           ctypes.POINTER(ctypes.c_float), ctypes.c_int, ctypes.POINTER(ctypes.c_float),
                                           ctypes.POINTER(ctypes.c_float), ctypes.c_int, ctypes.POINTER(ctypes.c_float),
                                           ctypes.c_int, ctypes.c_int, ctypes.POINTER(ctypes.c_float)]
-        info = lp_lib.LAPACKE_sgesvd(101, b'A', b'A', shape[0], shape[1], aout, shape[1], s, u, shape[0], vt, shape[0], shape[0], superb)
+        info = lp_lib.LAPACKE_sgesvd(101, b'A', b'A', shape[0], shape[1], aout, shape[1], s, u, shape[0], vt, shape[1], shape[0], superb)
         if info != 0:
             raise Exception("LAPACKE_sgesvd failed with error code {}".format(info))
+        if routine is True: return u, s, vt
         sout = (ctypes.c_float*(shape[0]*shape[1]))()
         for i in range(mind): sout[i*mind+i] = s[i]
         return u, sout, vt
@@ -250,6 +264,22 @@ class LAPACK:
             raise Exception("LAPACKE_sgetri failed with error code {}".format(info))
         return out
     
+    def _dpinv(A, shape):
+        dmin = min(shape[0], shape[1])
+        u, s, vt = LAPACK._dsvd(A, shape, False)
+        for i in range(dmin): 
+            if s[i*dmin+i] > 1e-15: s[i*dmin+i] = 1/s[i*dmin+i]
+        tmp = CBLAS._dgemm(vt, s, (shape[1], shape[1]), shape, 112, 111)
+        return CBLAS._dgemm(tmp, u, shape, (shape[0], shape[0]), 111, 112)
+    
+    def _spinv(A, shape):
+        dmin = min(shape[0], shape[1])
+        u, s, vt = LAPACK._ssvd(A, shape, False)
+        for i in range(dmin):
+            if s[i*dmin+i] > 1e-15: s[i*dmin+i] = 1/s[i*dmin+i]
+        tmp = CBLAS._sgemm(vt, s, (shape[1], shape[1]), shape, 112, 111)
+        return CBLAS._sgemm(tmp, u, shape, (shape[0], shape[0]), 111, 112)
+        
     def _dinv(A, shape):
         out, ipiv = LAPACK._dgetrf(A, shape)
         out = LAPACK._dgetri(out, ipiv, shape)
@@ -261,7 +291,7 @@ class LAPACK:
         return out
     
     def _dlu(A, shape):
-        out, ipiv = LAPACK._dgetrf(A, shape)
+        out, _ = LAPACK._dgetrf(A, shape)
         upper = (ctypes.c_double*(shape[0]*shape[1]))()
         lower = (ctypes.c_double*(shape[0]*shape[1]))()
         for i in range(shape[0]*shape[1]): 
@@ -271,7 +301,7 @@ class LAPACK:
         return lower, upper
     
     def _slu(A, shape):
-        out, ipiv = LAPACK._sgetrf(A, shape)
+        out, _ = LAPACK._sgetrf(A, shape)
         upper = (ctypes.c_float*(shape[0]*shape[1]))()
         lower = (ctypes.c_float*(shape[0]*shape[1]))()
         for i in range(shape[0]*shape[1]): 
