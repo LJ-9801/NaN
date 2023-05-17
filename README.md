@@ -15,6 +15,11 @@ in the near future. Rigth now the following kernels are available.
 ### matrix math kernels
 1. add/substract
 2. matmul
+3. eigenvalue decomposition
+4. SVD
+5. LU Decomposition
+6. matrix inverse
+7. pseudo-inverse for non-square matrix
 
 ## Requirements
 1. have python the pip install
@@ -28,7 +33,7 @@ in the near future. Rigth now the following kernels are available.
 2. GPU support
 
 ## Kernels To Be Implemented
-1. matrix factorization
+1. QR and Chol decomposition
 2. solvers
 3. outter/inner/dot/kron product
 
