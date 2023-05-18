@@ -187,7 +187,6 @@ class LAPACK:
     def _dsvd(A, shape, routine = False):
         aout = MemOps._dcopy(A, shape)
         mind = min(shape[0], shape[1])
-        maxd = max(shape[0], shape[1])
         s = (ctypes.c_double*(mind))()
         u = (ctypes.c_double*(shape[0]*shape[0]))()
         vt = (ctypes.c_double*(shape[1]*shape[1]))()
@@ -208,7 +207,6 @@ class LAPACK:
     def _ssvd(A, shape, routine = False):
         aout = MemOps._scopy(A, shape)
         mind = min(shape[0], shape[1])
-        maxd = max(shape[0], shape[1])
         s = (ctypes.c_float*(mind))()
         u = (ctypes.c_float*(shape[0]*shape[0]))()
         vt = (ctypes.c_float*(shape[1]*shape[1]))()
