@@ -13,15 +13,15 @@ fail = red + 'Fail' + Fore.RESET
 
 
 t1 = time.monotonic()
-N = 1024
+N = 2048
 # perform square matrix multiplication verifications
 # ===================================================================
 print('-' * 50)
 print('Performing matrix multiplication verifications')
 print('-' * 50)
 print('Generate random matrices and perform matrix multiplication and addition')
-A = mg.randn((N, N), (0, 1), 'double')
-B = mg.randn((N, N), (-5, 5), 'double')
+A = mg.rand((N, N), (0, 1), 'double')
+B = mg.rand((N, N), (-5, 5), 'double')
 D = A+B+A
 C = A*B*A
 C = np.ctypeslib.as_array(C.data, (N,N))
@@ -50,6 +50,7 @@ print('Testing other matrix generation')
 print('-' * 50)
 # testing zeros
 print('Testing zeros')
+N = 100
 z = mg.zeros((N, N), 'double')
 zn = np.ctypeslib.as_array(z.data, (N,N))
 print(success if np.allclose(zn, np.zeros((N, N))) else fail)
