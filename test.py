@@ -50,7 +50,6 @@ print('Testing other matrix generation')
 print('-' * 50)
 # testing zeros
 print('Testing zeros')
-N = 100
 z = mg.zeros((N, N), 'double')
 zn = np.ctypeslib.as_array(z.data, (N,N))
 print(success if np.allclose(zn, np.zeros((N, N))) else fail)
