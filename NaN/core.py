@@ -1,6 +1,6 @@
 from ctypes import *
 import matgen
-
+import carray
 
 class object:
     def __init__(self, data, shape, dtype):
@@ -50,62 +50,50 @@ class MATGEN:
         pass
 
     def _drand(size, length):
-        out = matgen.duniform(int(size[0]), int(size[1]), length[0], length[1])
-        ap = POINTER(c_double)(out)
-        return object(ap, size, 'double')
+        out = carray.drand(int(size[0])*int(size[1]), length[0], length[1])
+        return object(out, size, 'double')
     
     def _srand(size, length):
-        out = matgen.suniform(int(size[0]), int(size[1]), length[0], length[1])
-        ap = POINTER(c_float)(out)
-        return object(ap, size, 'float')
+        out = carray.srand(int(size[0])*int(size[1]), length[0], length[1])
+        return object(out, size, 'float')
     
     def _drandn(size, length):
-        out = matgen.drandn(int(size[0]), int(size[1]), length[0], length[1])
-        ap = POINTER(c_double)(out)
-        return object(ap, size, 'double')
+        out = carray.drandn(int(size[0])*int(size[1]), length[0], length[1])
+        return object(out, size, 'double')
 
     def _srandn(size, length):
-        out = matgen.srandn(int(size[0]), int(size[1]), length[0], length[1])
-        ap = POINTER(c_float)(out)
-        return object(ap, size, 'float')
+        out = carray.srandn(int(size[0])*int(size[1]), length[0], length[1])
+        return object(out, size, 'float')
     
     def _dzeros(size):
-        out = matgen.dzeros(int(size[0]), int(size[1]))
-        ap = POINTER(c_double)(out)
-        return object(ap, size, 'double')
+        out = carray.dzeros(int(size[0]), int(size[1]))
+        return object(out, size, 'double')
     
     def _szeros(size):
-        out = matgen.szeros(int(size), int(size[1]))
-        ap = POINTER(c_float)(out)
-        return object(ap, size, 'float')
+        out = carray.szeros(int(size[0]), int(size[1]))
+        return object(out, size, 'float')
     
     def _deye(size):
-        out = matgen.deye(int(size))
-        ap = POINTER(c_double)(out)
-        return object(ap, (size,size), 'double')
+        out = carray.deye(int(size))
+        return object(out, (size,size), 'double')
     
     def _seye(size):
-        out = matgen.seye(int(size))
-        ap = POINTER(c_float)(out)
-        return object(ap, (size,size), 'float')
+        out = carray.seye(int(size))
+        return object(out, (size,size), 'float')
     
     def _drot2(angle):
-        out = matgen.drot2(angle)
-        trans = POINTER(c_double)(out)
-        return object(trans, (2, 2), 'double')
+        out = carray.drot2(angle)
+        return object(out, (2, 2), 'double')
     
     def _srot2(angle):
-        out = matgen.srot2(angle)
-        trans = POINTER(c_float)(out)
-        return object(trans, (2, 2), 'float')
+        out = carray.srot2(angle)
+        return object(out, (2, 2), 'float')
     
     def _drot3(angle, axis):
-        out = matgen.drot3(angle, int(axis))
-        trans = POINTER(c_double)(out)
-        return object(trans, (3, 3), 'double')
+        out = carray.drot3(angle, int(axis))
+        return object(out, (3, 3), 'double')
     
     def _srot3(angle, axis):
-        out = matgen.srot3(angle, int(axis))
-        trans = POINTER(c_float)(out)
-        return object(trans, (3, 3), 'float')
+        out = carray.srot3(angle, int(axis))
+        return object(out, (3, 3), 'float')
         

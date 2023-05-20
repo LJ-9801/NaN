@@ -4,6 +4,8 @@ import os
 # setup extension
 def NaN_setup():
     utils_path = os.getcwd() + '/NaN/utils/'
+    src_path = os.getcwd() + '/NaN/src/'
+
     module1 = Extension('repr',
                         language='c++',
                         sources=[utils_path+'repr.pyx'],
@@ -15,6 +17,13 @@ def NaN_setup():
                         extra_compile_args=['-fopenmp', '-O3'],
                         extra_link_args=['-fopenmp', '-std=c++11'])
     
+    cmodule = Extension('carray',
+                        language='c++',
+                        sources=[src_path+'mat_gen.cpp'],
+                        include_dirs=[src_path],
+                        extra_compile_args=['-O3', '-pthread'],
+                        extra_link_args=['-std=c++11'])
+    
 
     setup(name='NaN',
         version='1.0',
@@ -24,7 +33,7 @@ def NaN_setup():
         packages=find_packages(),
         install_requires=['pylib-openblas', 'colorama', 'cython'],
         python_requires='>=3.8',
-        ext_modules=cythonize([module1,module2]),
+        ext_modules=cythonize([module1,module2]) + [cmodule],
         zip_safe=False,
         extras_require={
             'testing': ['numpy'],
