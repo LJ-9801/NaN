@@ -11,12 +11,6 @@ def NaN_setup():
                         sources=[utils_path+'repr.pyx'],
                         extra_compile_args=['-O3'])
     
-    module2 = Extension('matgen',
-                        language='c++',
-                        sources=[utils_path+'matgen.pyx'],
-                        extra_compile_args=['-fopenmp', '-O3'],
-                        extra_link_args=['-fopenmp', '-std=c++11'])
-    
     cmodule = Extension('carray',
                         language='c++',
                         sources=[src_path+'mat_gen.cpp'],
@@ -33,7 +27,7 @@ def NaN_setup():
         packages=find_packages(),
         install_requires=['pylib-openblas', 'colorama', 'cython'],
         python_requires='>=3.8',
-        ext_modules=cythonize([module1,module2]) + [cmodule],
+        ext_modules=cythonize([module1]) + [cmodule],
         zip_safe=False,
         extras_require={
             'testing': ['numpy'],

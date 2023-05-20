@@ -1,5 +1,4 @@
 from ctypes import *
-import matgen
 import carray
 
 class object:
