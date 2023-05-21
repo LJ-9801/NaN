@@ -9,7 +9,7 @@
 
 void *drandn_thread(void *arg){
     double_data_t *data = (double_data_t *)arg;
-    std::mt19937 gen(data->thread_id);
+    std::mt19937 gen(data->thread_id ^ (unsigned int)time(NULL));
     double mean = data->r1;
     double std = data->r2;
     std::normal_distribution<double> dis(mean, std);
@@ -24,7 +24,7 @@ void *drandn_thread(void *arg){
 
 void *srandn_thread(void *arg){
     float_data_t *data = (float_data_t *)arg;
-    std::mt19937 gen(data->thread_id);
+    std::mt19937 gen(data->thread_id ^ (unsigned int)time(NULL));
     float mean = data->r1;
     float std = data->r2;
     std::normal_distribution<float> dis(mean, std);
@@ -40,7 +40,7 @@ void *srandn_thread(void *arg){
 void *drandfill_thread(void *arg)
 {
     double_data_t *data = (double_data_t *)arg;
-    std::mt19937 gen(data->thread_id);
+    std::mt19937 gen(data->thread_id ^ (unsigned int)time(NULL));
     double a = data->r1;
     double b = data->r2;
     std::uniform_real_distribution<> dis(a, b);
@@ -57,7 +57,7 @@ void *srandfill_thread(void *arg)
 {
     float_data_t *data = (float_data_t *)arg;
 
-    std::mt19937 gen(data->thread_id);
+    std::mt19937 gen(data->thread_id ^ (unsigned int)time(NULL));
     float a = data->r1;
     float b = data->r2;
     std::uniform_real_distribution<> dis(a, b);
@@ -140,6 +140,7 @@ void drandnfill(const int n1, const double mean, const double std, double* array
 }
 
 void srandnfill(const int n1, const float mean, const float std, float* array){
+    
     pthread_t threads[NUM_THREADS];
     float_data_t float_data[NUM_THREADS];
 
