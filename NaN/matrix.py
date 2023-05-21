@@ -77,15 +77,23 @@ class matrix:
     
     def __getitem__(self, index):
         if isinstance(index, tuple) and isinstance(index[0], int) and isinstance(index[1], int):
+            if index[0] >= self.shape[0] or index[1] >= self.shape[1]:
+                raise IndexError('Index out of range')
             ret = ALLType.MemOpsDict['copy'][self.dtype](self.core.data[index[0] + index[1]*self.shape[0]], (1,1))
             return matrix(object(ret, (1,1), self.dtype), self.dtype)
         elif isinstance(index, tuple) and isinstance(index[0], int) and isinstance(index[1], slice):
+            if index[0] >= self.shape[0] or index[1].stop > self.shape[1] or index[1].start - index[1].stop > self.shape[1]:
+                raise IndexError('Index out of range')
             ret = ALLType.MemOpsDict['copy'][self.dtype](self.core.data[index[0] + index[1].start*self.shape[0]:index[0] + index[1].stop*self.shape[0]], (index[1].stop - index[1].start, 1))
             return matrix(object(ret, (index[1].stop - index[1].start, 1), self.dtype), self.dtype)
         elif isinstance(index, tuple) and isinstance(index[0], slice) and isinstance(index[1], int):
+            if index[0].stop > self.shape[0] or index[1] >= self.shape[1] or index[0].start - index[0].stop > self.shape[0]:
+                raise IndexError('Index out of range')
             ret = ALLType.MemOpsDict['copy'][self.dtype](self.core.data[index[0].start + index[1]*self.shape[0]:index[0].stop + index[1]*self.shape[0]], (index[0].stop - index[0].start, 1))
             return matrix(object(ret, (index[0].stop - index[0].start, 1), self.dtype), self.dtype)
         elif isinstance(index, tuple) and isinstance(index[0], slice) and isinstance(index[1], slice):
+            if index[0].stop > self.shape[0] or index[1].stop > self.shape[1] or index[0].start - index[0].stop > self.shape[0] or index[1].start - index[1].stop > self.shape[1]:
+                raise IndexError('Index out of range')
             ret = (ALLType.TypeDict[self.dtype]*((index[0].stop - index[0].start)*(index[1].stop - index[1].start)))()
             for i in range(index[1].start, index[1].stop):
                 ret[(i - index[1].start)*(index[0].stop - index[0].start):(i - index[1].start)*(index[0].stop - index[0].start) + (index[0].stop - index[0].start)] = self.core.data[index[0].start + i*self.shape[0]:index[0].stop + i*self.shape[0]]
