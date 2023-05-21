@@ -200,7 +200,7 @@ class LAPACK:
             raise Exception("LAPACKE_dgesvd failed with error code {}".format(info))
         if routine is True: return u, s, vt
         sout = (ctypes.c_double*(shape[0]*shape[1]))()
-        for i in range(mind): sout[i*mind+i] = s[i]
+        for i in range(mind): sout[i*shape[1]+i] = s[i]
         return u, sout, vt
         
     
@@ -220,7 +220,7 @@ class LAPACK:
             raise Exception("LAPACKE_sgesvd failed with error code {}".format(info))
         if routine is True: return u, s, vt
         sout = (ctypes.c_float*(shape[0]*shape[1]))()
-        for i in range(mind): sout[i*mind+i] = s[i]
+        for i in range(mind): sout[i*shape[1]+i] = s[i]
         return u, sout, vt
     
     # LU decomposition

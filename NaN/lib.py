@@ -3,6 +3,7 @@ from ctypes import *
 from NaN.type import ALLType
 
 class matGen:
+    @staticmethod
     def rand(size, length, dtype = 'float'):
         if type(size) != tuple:
             raise TypeError('Invalid data type, size input must be of type tuple')
@@ -13,7 +14,8 @@ class matGen:
         func = ALLType.MatGenDict['rand'][dtype]
         A = func(size, length)
         return matrix(A, dtype)
-
+    
+    @staticmethod
     def randn(size, length, dtype = 'float'):
         if type(size) != tuple:
             raise TypeError('Invalid data type, size input must be of type tuple')
@@ -23,6 +25,7 @@ class matGen:
         A = func(size, length)
         return matrix(A, dtype)
 
+    @staticmethod
     def zeros(size, dtype = 'float'):
         if type(size) != tuple:
             raise TypeError('Invalid data type, size input must be of type tuple')
@@ -31,7 +34,8 @@ class matGen:
         func = ALLType.MatGenDict['zeros'][dtype]
         A = func(size)
         return matrix(A, dtype)
-
+    
+    @staticmethod
     def eye(size, dtype = 'float'):
         if type(size) != int:
             raise TypeError('Invalid data type, input must be of type int')
@@ -41,6 +45,7 @@ class matGen:
         A = func(size)
         return matrix(A, dtype)
     
+    @staticmethod
     def rot2(angle, dtype = 'float'):
         if dtype not in ALLType.TypeDict: 
             raise TypeError('Invalid data type')
@@ -48,6 +53,7 @@ class matGen:
         A = func(angle)
         return matrix(A, dtype)
     
+    @staticmethod
     def rot3(angle, axis, dtype = 'float'):
         if(axis > 2):
             raise TypeError('Invalid rotation axis')    
@@ -59,6 +65,7 @@ class matGen:
     
 
 class ops(matrix):
+    @staticmethod
     def eig(in_matrix: matrix):
         if in_matrix.dtype not in ALLType.TypeDict:
             raise TypeError('Invalid data type')
@@ -68,6 +75,7 @@ class ops(matrix):
         eigval, ev = func(in_matrix.core.data, in_matrix.shape)
         return matrix(object(eigval, in_matrix.shape, in_matrix.dtype), in_matrix.dtype), matrix(object(ev, in_matrix.shape, in_matrix.dtype), in_matrix.dtype)
     
+    @staticmethod
     def svd(in_matrix: matrix):
         if in_matrix.dtype not in ALLType.TypeDict:
             raise TypeError('Invalid data type')
@@ -75,6 +83,7 @@ class ops(matrix):
         U,S,V = func(in_matrix.core.data, in_matrix.shape, False)
         return matrix(object(U, (in_matrix.shape[0], in_matrix.shape[0]), in_matrix.dtype), in_matrix.dtype), matrix(object(S, in_matrix.shape, in_matrix.dtype), in_matrix.dtype), matrix(object(V, (in_matrix.shape[1], in_matrix.shape[1]), in_matrix.dtype), in_matrix.dtype)
     
+    @staticmethod
     def lu(in_matrix: matrix):
         if in_matrix.dtype not in ALLType.TypeDict:
             raise TypeError('Invalid data type')
@@ -84,6 +93,7 @@ class ops(matrix):
         L, U = func(in_matrix.core.data, in_matrix.shape)
         return matrix(object(L, in_matrix.shape, in_matrix.dtype), in_matrix.dtype),matrix(object(U, in_matrix.shape, in_matrix.dtype), in_matrix.dtype)
     
+    @staticmethod
     def inv(in_matrix: matrix):
         if in_matrix.dtype not in ALLType.TypeDict:
             raise TypeError('Invalid data type')
@@ -93,6 +103,7 @@ class ops(matrix):
         A = func(in_matrix.core.data, in_matrix.shape)
         return matrix(object(A, in_matrix.shape, in_matrix.dtype), in_matrix.dtype)
     
+    @staticmethod
     def pinv(in_matrix: matrix):
         if in_matrix.dtype not in ALLType.TypeDict:
             raise TypeError('Invalid data type')
