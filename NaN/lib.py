@@ -8,6 +8,8 @@ class matGen:
             raise TypeError('Invalid data type, size input must be of type tuple')
         if type(length) != tuple:
             raise TypeError('Invalid data type, range input must be of type tuple')
+        if length[0] > length[1]:
+            raise ValueError('Invalid range input, range must be in ascending order')
         func = ALLType.MatGenDict['rand'][dtype]
         A = func(size, length)
         return matrix(A, dtype)
