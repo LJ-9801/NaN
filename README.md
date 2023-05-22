@@ -22,7 +22,7 @@ in the near future. Rigth now the following kernels are available.
 7. pseudo-inverse for non-square matrix
 
 ## Some Example
-'''python
+```python
 from NaN.lib import matGen as mg
 from NaN.lib import ops
 from NaN.matrix import matrix
@@ -40,7 +40,7 @@ c = a*b
 
 # do a Singlar Value Decomposition
 u,s,vt = ops.svd(c)
-'''
+```
 
 ## Requirements
 1. have python the pip install
