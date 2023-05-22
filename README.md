@@ -62,9 +62,9 @@ u,s,vt = ops.svd(c)
 It is highly recommanded that you use a conda environment for this
 library since it provides a much faster BLAS compared to pip. To install
 BLAS from conda, type in: 
-'''console
+```console
 foo@whoami:~$ conda install -c anaconda openblas
-'''
+```
 before you pip install this library
 
 
