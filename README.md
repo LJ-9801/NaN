@@ -21,6 +21,27 @@ in the near future. Rigth now the following kernels are available.
 6. matrix inverse
 7. pseudo-inverse for non-square matrix
 
+## Some Example
+'''python
+from NaN.lib import matGen as mg
+from NaN.lib import ops
+from NaN.matrix import matrix
+
+# to create a matrix
+a = matrix([[1,2,3],[2,3,4],[5,6,7]], 'double')
+# to generate a matrix with normal distribution value
+# with mean of 0 and std of 1
+a = mg.randn((2, 3), (0, 1), 'double')
+# to generate a matrix with uniform distribution value
+# from 0 to 5
+b = mg.randn((3, 2), (0, 5), 'double')
+# do a matmul
+c = a*b
+
+# do a Singlar Value Decomposition
+u,s,vt = ops.svd(c)
+'''
+
 ## Requirements
 1. have python the pip install
 
@@ -36,5 +57,15 @@ in the near future. Rigth now the following kernels are available.
 1. QR and Chol decomposition
 2. solvers
 3. outter/inner/dot/kron product
+
+## BLAS Recommandation
+It is highly recommanded that you use a conda environment for this
+library since it provides a much faster BLAS compared to pip. To install
+BLAS from conda, type in: 
+'''console
+foo@whoami:~$ conda install -c anaconda openblas
+'''
+before you pip install this library
+
 
 
