@@ -8,6 +8,11 @@ class object:
         self.data = data
 
 class cArray:
+    def _float_to_double(inobj: object):
+        mem = (c_double*(inobj.shape[0]*inobj.shape[1]))()
+        mem[0:inobj.shape[0]*inobj.shape[1]] = inobj.data[0:inobj.shape[0]*inobj.shape[1]]
+        return object(mem, inobj.shape, 'double')
+
     def _to_2dlist(inpointer, shape: tuple):
         outlist = []
         for i in range(shape[0]):

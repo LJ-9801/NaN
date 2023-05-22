@@ -34,6 +34,8 @@ class ALLType:
                       'lu': {'double': LAPACK._dlu, 'float': LAPACK._slu},
                       'inv': {'double': LAPACK._dinv, 'float': LAPACK._sinv},
                       'pinv': {'double': LAPACK._dpinv, 'float': LAPACK._spinv},}
+
+        TypeRank = {'bool': 0, 'char': 1, 'short': 2, 'int': 3, 'long': 4, 'float': 5, 'double': 6}
         
         
     

@@ -1,5 +1,5 @@
 from ctypes import *
-from NaN.core import object
+from NaN.core import object, cArray
 from NaN.type import ALLType
 import repr
 
@@ -36,6 +36,13 @@ class matrix:
         return str(repr.tostr(self.core.data, self.shape[0], self.shape[1]).decode('utf-8'))
     
     def __mul__(self, other):
+        if ALLType.TypeRank[self.dtype] > ALLType.TypeRank[other.dtype]:
+            other.core = cArray._float_to_double(other.core)
+            other.dtype = other.core.dtype
+        elif ALLType.TypeRank[self.dtype] < ALLType.TypeRank[other.dtype]:
+            self.core = cArray._float_to_double(self.core)
+            self.dtype = self.core.dtype
+
         out_dim = (self.shape[0], other.shape[1])
         if(type(other) != type(self)):
             raise TypeError('Invalid data type, input must be of type matrix')
@@ -50,6 +57,13 @@ class matrix:
         return matrix(object(C, out_dim, self.dtype), self.dtype)
     
     def __add__(self, other):
+        if ALLType.TypeRank[self.dtype] > ALLType.TypeRank[other.dtype]:
+            other.core = cArray._float_to_double(other.core)
+            other.dtype = other.core.dtype
+        elif ALLType.TypeRank[self.dtype] < ALLType.TypeRank[other.dtype]:
+            self.core = cArray._float_to_double(self.core)
+            self.dtype = self.core.dtype
+
         if(type(other) != type(self)):
             raise TypeError('Invalid data type, input must be of type matrix')
         if(self.shape != other.shape):
@@ -63,6 +77,13 @@ class matrix:
         return matrix(object(C, self.shape, self.dtype), self.dtype)
     
     def __sub__(self, other):
+        if ALLType.TypeRank[self.dtype] > ALLType.TypeRank[other.dtype]:
+            other.core = cArray._float_to_double(other.core)
+            other.dtype = other.core.dtype
+        elif ALLType.TypeRank[self.dtype] < ALLType.TypeRank[other.dtype]:
+            self.core = cArray._float_to_double(self.core)
+            self.dtype = self.core.dtype
+
         if(type(other) != type(self)):
             raise TypeError('Invalid data type, input must be of type matrix')
         if(self.shape != other.shape):
