@@ -71,8 +71,8 @@ bn = np.array(b)
 cn = an @ bn @ an
 print(success if np.allclose(c, cn) else fail)
 print("Testing float type matrices operation")
-a = mg.randn((N1,N2), (0,1), 'float')
-b = mg.randn((N2,N1), (0,1), 'float')
+a = mg.rand((N1,N2), (0,5), 'float')
+b = mg.rand((N2,N1), (0,5), 'float')
 c = a*b
 a = np.ctypeslib.as_array(a.data, (N1,N2))
 b = np.ctypeslib.as_array(b.data, (N2,N1))
