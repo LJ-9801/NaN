@@ -34,7 +34,7 @@ a = matrix([[1,2,3],[2,3,4],[5,6,7]], 'double')
 a = mg.randn((2, 3), (0, 1), 'double')
 # to generate a matrix with uniform distribution value
 # from 0 to 5
-b = mg.randn((3, 2), (0, 5), 'double')
+b = mg.rand((3, 2), (0, 5), 'double')
 # do a matmul
 c = a*b
 
