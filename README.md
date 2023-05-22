@@ -49,14 +49,18 @@ u,s,vt = ops.svd(c)
 1. run "pip install ." to install the library
 
 ## TODO
-1. dynamic typing
-2. transpose
-2. GPU support
+1. transpose
+2. QR and Chol decomposition
+3. solvers
+4. outter/inner/dot/kron product
+5. GPU support
 
-## Kernels To Be Implemented
-1. QR and Chol decomposition
-2. solvers
-3. outter/inner/dot/kron product
+## Dynamic Typing
+This library also support dynamic typing(multiplying a double with float) however
+with a small drop in performance. The way it handles different type is that it
+promote lower precision type to a higher one. Since data are copied from one type
+to another, it causes a small drop in performance. Further work will be done to
+improve this.
 
 ## BLAS Recommandation
 It is highly recommanded that you use a conda environment for this
