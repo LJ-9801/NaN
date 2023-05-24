@@ -33,6 +33,12 @@ class matrix:
         return matrix(object(ret, self.shape, self.dtype), self.dtype)
     
     def __repr__(self) -> str:
+        if self.shape[0] > 8 and self.shape[1] < 8:
+            return str(repr.largeM(self.core.data, self.shape[0], self.shape[1]).decode('utf-8'))
+        elif self.shape[0] < 8 and self.shape[1] > 8:
+            return str(repr.largeN(self.core.data, self.shape[0], self.shape[1]).decode('utf-8'))
+        elif self.shape[0] > 8 and self.shape[1] > 8:
+            return str(repr.largeMN(self.core.data, self.shape[0], self.shape[1]).decode('utf-8'))
         return str(repr.tostr(self.core.data, self.shape[0], self.shape[1]).decode('utf-8'))
     
     def __mul__(self, other):
