@@ -693,7 +693,7 @@ static PyMethodDef module_methods[] = {
 
 static struct PyModuleDef moduledef = {
     PyModuleDef_HEAD_INIT,
-    "carray",
+    "generator",
     NULL,
     -1,
     module_methods,
@@ -703,7 +703,7 @@ static struct PyModuleDef moduledef = {
     NULL
 };
 
-PyMODINIT_FUNC PyInit_carray(void){
+PyMODINIT_FUNC PyInit_generator(void){
     PyObject *m;
     m = PyModule_Create(&moduledef);
     if (!m)
