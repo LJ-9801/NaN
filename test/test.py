@@ -116,7 +116,7 @@ N2 = 100
 A = mg.randn((N2, N2), (0, 1), 'double')
 B = A[0:5, 0:5]
 A = np.ctypeslib.as_array(A.data, (N2,N2))
-B = np.ctypeslib.as_array(B.data)
+B = np.ctypeslib.as_array(B.data, (5,5))
 Bn = A[0:5, 0:5]
 print(success if B.all()==Bn.all() else fail)
 t = time.monotonic() - t1

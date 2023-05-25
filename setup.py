@@ -11,11 +11,17 @@ def NaN_setup():
                         sources=[utils_path+'repr.pyx'],
                         extra_compile_args=['-O3'])
     
-    cmodule = Extension('carray',
+    cmodule = Extension('generator',
                         language='c++',
                         sources=[src_path+'mat_gen.cpp'],
                         include_dirs=[src_path],
                         extra_compile_args=['-O3', '-pthread'],
+                        extra_link_args=['-std=c++11'])
+    
+    dymtype = Extension('dymtype',
+                        language='c++',
+                        sources=[utils_path+'dymtype.cpp'],
+                        extra_compile_args=['-O3'],
                         extra_link_args=['-std=c++11'])
     
 
@@ -27,7 +33,7 @@ def NaN_setup():
         packages=find_packages(),
         install_requires=['pylib-openblas', 'colorama', 'cython'],
         python_requires='>=3.8',
-        ext_modules=cythonize([module1]) + [cmodule],
+        ext_modules=cythonize([module1]) + [cmodule, dymtype],
         zip_safe=False,
         extras_require={
             'testing': ['numpy'],

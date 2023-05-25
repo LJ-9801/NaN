@@ -1,5 +1,7 @@
 from ctypes import *
-import carray
+import generator
+import array
+import dymtype
 
 class object:
     def __init__(self, data, shape, dtype):
@@ -9,9 +11,9 @@ class object:
 
 class cArray:
     def _float_to_double(inobj: object):
-        mem = (c_double*(inobj.shape[0]*inobj.shape[1]))()
-        mem[0:inobj.shape[0]*inobj.shape[1]] = inobj.data[0:inobj.shape[0]*inobj.shape[1]]
-        return object(mem, inobj.shape, 'double')
+        arr = array.array('d', inobj.data[:inobj.shape[0]*inobj.shape[1]])
+        out = dymtype.toctypes(arr)
+        return object(out, inobj.shape, 'double')
 
     def _to_2dlist(inpointer, shape: tuple):
         outlist = []
@@ -54,50 +56,50 @@ class MATGEN:
         pass
 
     def _drand(size, length):
-        out = carray.drand(int(size[0])*int(size[1]), length[0], length[1])
+        out = generator.drand(int(size[0])*int(size[1]), length[0], length[1])
         return object(out, size, 'double')
     
     def _srand(size, length):
-        out = carray.srand(int(size[0])*int(size[1]), length[0], length[1])
+        out = generator.srand(int(size[0])*int(size[1]), length[0], length[1])
         return object(out, size, 'float')
     
     def _drandn(size, length):
-        out = carray.drandn(int(size[0])*int(size[1]), length[0], length[1])
+        out = generator.drandn(int(size[0])*int(size[1]), length[0], length[1])
         return object(out, size, 'double')
 
     def _srandn(size, length):
-        out = carray.srandn(int(size[0])*int(size[1]), length[0], length[1])
+        out = generator.srandn(int(size[0])*int(size[1]), length[0], length[1])
         return object(out, size, 'float')
     
     def _dzeros(size):
-        out = carray.dzeros(int(size[0]), int(size[1]))
+        out = generator.dzeros(int(size[0]), int(size[1]))
         return object(out, size, 'double')
     
     def _szeros(size):
-        out = carray.szeros(int(size[0]), int(size[1]))
+        out = generator.szeros(int(size[0]), int(size[1]))
         return object(out, size, 'float')
     
     def _deye(size):
-        out = carray.deye(int(size))
+        out = generator.deye(int(size))
         return object(out, (size,size), 'double')
     
     def _seye(size):
-        out = carray.seye(int(size))
+        out = generator.seye(int(size))
         return object(out, (size,size), 'float')
     
     def _drot2(angle):
-        out = carray.drot2(angle)
+        out = generator.drot2(angle)
         return object(out, (2, 2), 'double')
     
     def _srot2(angle):
-        out = carray.srot2(angle)
+        out = generator.srot2(angle)
         return object(out, (2, 2), 'float')
     
     def _drot3(angle, axis):
-        out = carray.drot3(angle, int(axis))
+        out = generator.drot3(angle, int(axis))
         return object(out, (3, 3), 'double')
     
     def _srot3(angle, axis):
-        out = carray.srot3(angle, int(axis))
+        out = generator.srot3(angle, int(axis))
         return object(out, (3, 3), 'float')
         
