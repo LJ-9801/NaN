@@ -43,9 +43,8 @@ u,s,vt = ops.svd(c)
 ```
 
 ## Requirements
-Installation of BLAS in pip is very slow and the performance is not greate
-either, so we recommand:
-1. use a conda environment for optimal performance(see BLAS Recommandation)
+Installation of BLAS in pip is very slow and the performance is not great
+either, so we recommand using a conda environment for optimal performance(see BLAS Recommandation)
 
 ## Installation
 1. run "pip install ." to install the library
@@ -55,13 +54,6 @@ either, so we recommand:
 2. solvers
 3. outter/inner/dot/kron product
 4. GPU support
-
-## Dynamic Typing
-This library also support dynamic typing(multiplying a double with float) however
-with a small drop in performance. The way it handles different type is that it
-promote lower precision type to a higher one. Since data are copied from one type
-to another, it causes a small drop in performance. Further work will be done to
-improve this.
 
 ## BLAS Recommandation
 It is highly recommanded that you use a conda environment for this
