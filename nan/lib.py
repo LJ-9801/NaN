@@ -73,7 +73,8 @@ class ops(matrix):
             raise TypeError('Non-square matrix cannot be eigendecomposed')
         func = ALLType.LapackDict['eig'][in_matrix.dtype]
         eigval, ev = func(in_matrix.core.data, in_matrix.shape)
-        return matrix(object(eigval, in_matrix.shape, in_matrix.dtype), in_matrix.dtype), matrix(object(ev, in_matrix.shape, in_matrix.dtype), in_matrix.dtype)
+        return (matrix(object(eigval, in_matrix.shape, in_matrix.dtype), in_matrix.dtype), 
+                matrix(object(ev, in_matrix.shape, in_matrix.dtype), in_matrix.dtype))
     
     @staticmethod
     def svd(in_matrix: matrix):
@@ -81,7 +82,9 @@ class ops(matrix):
             raise TypeError('Invalid data type')
         func = ALLType.LapackDict['svd'][in_matrix.dtype]
         U,S,V = func(in_matrix.core.data, in_matrix.shape, False)
-        return matrix(object(U, (in_matrix.shape[0], in_matrix.shape[0]), in_matrix.dtype), in_matrix.dtype), matrix(object(S, in_matrix.shape, in_matrix.dtype), in_matrix.dtype), matrix(object(V, (in_matrix.shape[1], in_matrix.shape[1]), in_matrix.dtype), in_matrix.dtype)
+        return (matrix(object(U, (in_matrix.shape[0], in_matrix.shape[0]), in_matrix.dtype), in_matrix.dtype), 
+                matrix(object(S, in_matrix.shape, in_matrix.dtype), in_matrix.dtype), 
+                matrix(object(V, (in_matrix.shape[1], in_matrix.shape[1]), in_matrix.dtype), in_matrix.dtype))
     
     @staticmethod
     def lu(in_matrix: matrix):
@@ -91,7 +94,8 @@ class ops(matrix):
             raise TypeError('Non-square matrix cannot be LU decomposed')
         func = ALLType.LapackDict['lu'][in_matrix.dtype]
         L, U = func(in_matrix.core.data, in_matrix.shape)
-        return matrix(object(L, in_matrix.shape, in_matrix.dtype), in_matrix.dtype),matrix(object(U, in_matrix.shape, in_matrix.dtype), in_matrix.dtype)
+        return (matrix(object(L, in_matrix.shape, in_matrix.dtype), in_matrix.dtype),
+                matrix(object(U, in_matrix.shape, in_matrix.dtype), in_matrix.dtype))
     
     @staticmethod
     def inv(in_matrix: matrix):
