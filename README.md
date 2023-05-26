@@ -43,8 +43,9 @@ u,s,vt = ops.svd(c)
 ```
 
 ## Requirements
-1. install cython
-2. use a conda environment for optimal performance(see BLAS Recommandation)
+Installation of BLAS in pip is very slow and the performance is not greate
+either, so we recommand:
+1. use a conda environment for optimal performance(see BLAS Recommandation)
 
 ## Installation
 1. run "pip install ." to install the library
