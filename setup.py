@@ -6,9 +6,9 @@ def NaN_setup():
     utils_path = os.getcwd() + '/NaN/utils/'
     src_path = os.getcwd() + '/NaN/src/'
 
-    module1 = Extension('repr',
+    module1 = Extension('mtostr',
                         language='c++',
-                        sources=[utils_path+'repr.pyx'],
+                        sources=[utils_path+'repr.cpp'],
                         extra_compile_args=['-O3'])
     
     cmodule = Extension('generator',

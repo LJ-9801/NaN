@@ -1,7 +1,8 @@
 from ctypes import *
 from NaN.core import object, cArray
 from NaN.type import ALLType
-import repr
+import array
+import mtostr
 
 
 class utils:
@@ -12,7 +13,7 @@ class utils:
         else:return ALLType.ArrayDict[dtype]['1d'](data)
 
 class matrix:
-    def __init__(self, data, dtype):
+    def __init__(self, data, dtype = 'float'):
         # this will hold pointers to the data
         if type(data) == list:
             self.dtype = dtype
@@ -33,13 +34,14 @@ class matrix:
         return matrix(object(ret, self.shape, self.dtype), self.dtype)
     
     def __repr__(self) -> str:
+        dat = array.array('d', self.core.data[:self.shape[0]*self.shape[1]])
         if self.shape[0] > 8 and self.shape[1] < 8:
-            return str(repr.largeM(self.core.data, self.shape[0], self.shape[1]).decode('utf-8'))
+            return str(mtostr.largeM(dat, self.shape[0], self.shape[1]))
         elif self.shape[0] < 8 and self.shape[1] > 8:
-            return str(repr.largeN(self.core.data, self.shape[0], self.shape[1]).decode('utf-8'))
+            return str(mtostr.largeN(dat, self.shape[0], self.shape[1]))
         elif self.shape[0] > 8 and self.shape[1] > 8:
-            return str(repr.largeMN(self.core.data, self.shape[0], self.shape[1]).decode('utf-8'))
-        return str(repr.tostr(self.core.data, self.shape[0], self.shape[1]).decode('utf-8'))
+            return str(mtostr.largeMN(dat, self.shape[0], self.shape[1]))
+        return str(mtostr.normal(dat, self.shape[0], self.shape[1]))
     
     def __mul__(self, other):
         if ALLType.TypeRank[self.dtype] > ALLType.TypeRank[other.dtype]:
@@ -125,7 +127,8 @@ class matrix:
                 raise IndexError('Index out of range')
             ret = (ALLType.TypeDict[self.dtype]*((index[0].stop - index[0].start)*(index[1].stop - index[1].start)))()
             for i in range(index[0].start, index[0].stop):
-                ret[(i - index[0].start)*(index[1].stop - index[1].start):(i - index[0].start)*(index[1].stop - index[1].start) + (index[1].stop - index[1].start)] = self.core.data[index[1].start + i*self.shape[0]:index[1].stop + i*self.shape[0]]
+                #ret[(i - index[0].start)*
+                ret[(i - index[0].start)*(index[1].stop - index[1].start):(i - index[0].start)*(index[1].stop - index[1].start) + (index[1].stop - index[1].start)] = self.core.data[i*self.shape[1]:i*self.shape[1] + index[1].stop - index[1].start]
             ret = ALLType.MemOpsDict['copy'][self.dtype](ret, (index[0].stop - index[0].start, index[1].stop - index[1].start))
             return matrix(object(ret, (index[0].stop - index[0].start, index[1].stop - index[1].start), self.dtype), self.dtype)
                 
