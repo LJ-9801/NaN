@@ -51,11 +51,10 @@ either, so we recommand:
 1. run "pip install ." to install the library
 
 ## TODO
-1. transpose
-2. QR and Chol decomposition
-3. solvers
-4. outter/inner/dot/kron product
-5. GPU support
+1. QR and Chol decomposition
+2. solvers
+3. outter/inner/dot/kron product
+4. GPU support
 
 ## Dynamic Typing
 This library also support dynamic typing(multiplying a double with float) however
