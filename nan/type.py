@@ -2,7 +2,6 @@ from ctypes import *
 from nan.core import MATGEN, cArray
 from nan.mkl import CBLAS, MemOps, LAPACK
 
-
 class ALLType:
         TypeDict = {'double': c_double, 
             'float': c_float, 
