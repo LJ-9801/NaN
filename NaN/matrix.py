@@ -127,7 +127,6 @@ class matrix:
                 raise IndexError('Index out of range')
             ret = (ALLType.TypeDict[self.dtype]*((index[0].stop - index[0].start)*(index[1].stop - index[1].start)))()
             for i in range(index[0].start, index[0].stop):
-                #ret[(i - index[0].start)*
                 ret[(i - index[0].start)*(index[1].stop - index[1].start):(i - index[0].start)*(index[1].stop - index[1].start) + (index[1].stop - index[1].start)] = self.core.data[i*self.shape[1]:i*self.shape[1] + index[1].stop - index[1].start]
             ret = ALLType.MemOpsDict['copy'][self.dtype](ret, (index[0].stop - index[0].start, index[1].stop - index[1].start))
             return matrix(object(ret, (index[0].stop - index[0].start, index[1].stop - index[1].start), self.dtype), self.dtype)
