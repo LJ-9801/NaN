@@ -1,5 +1,5 @@
-from NaN.lib import matGen as mg
-from NaN.matrix import matrix
+from nan.lib import matgen as mg
+from nan.matrix import matrix
 from colorama import Fore
 import numpy as np
 import time

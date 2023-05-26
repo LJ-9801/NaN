@@ -1,6 +1,6 @@
 import ctypes, ctypes.util
 import os
-from NaN.core import MATGEN
+from nan.core import MATGEN
 
 # find CBLAS
 cblas = ctypes.util.find_library('blas')

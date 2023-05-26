@@ -1,6 +1,6 @@
 from ctypes import *
-from NaN.core import object, cArray
-from NaN.type import ALLType
+from nan.core import object, cArray
+from nan.type import ALLType
 import array
 import mtostr
 

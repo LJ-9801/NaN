@@ -1,8 +1,8 @@
-from NaN.matrix import matrix, object
+from nan.matrix import matrix, object
 from ctypes import *
-from NaN.type import ALLType
+from nan.type import ALLType
 
-class matGen:
+class matgen:
     @staticmethod
     def rand(size, length, dtype = 'float'):
         if type(size) != tuple:

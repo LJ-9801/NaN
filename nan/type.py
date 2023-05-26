@@ -1,7 +1,7 @@
 from ctypes import *
-from NaN.core import MATGEN
-from NaN.mkl import CBLAS, MemOps, LAPACK
-from NaN.core import cArray
+from nan.core import MATGEN
+from nan.mkl import CBLAS, MemOps, LAPACK
+from nan.core import cArray
 
 class ALLType:
         TypeDict = {'double': c_double, 

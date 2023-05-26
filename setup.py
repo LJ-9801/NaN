@@ -25,7 +25,7 @@ def NaN_setup():
                         extra_link_args=['-std=c++11'])
     
 
-    setup(name='NaN',
+    setup(name='nan',
         version='1.0',
         description='A lightweight and fast matrix library',
         author='Jiexiang Liu',
