@@ -1,6 +1,6 @@
 import ctypes, ctypes.util
 import os
-
+from NaN.core import MATGEN
 
 # find CBLAS
 cblas = ctypes.util.find_library('blas')
@@ -73,6 +73,31 @@ class CBLAS:
         cblas_lib.cblas_sgemm.restype = None  
         cblas_lib.cblas_sgemm(101, Alayout, Blayout, Ashape[0], Bshape[1], Ashape[1], 1.0, A, Ashape[1], B, Bshape[1], 0.0, C, out_dim[1])
         return C
+    
+    def _dtranspose(A, shape):
+        id = MATGEN._deye(shape[0]).data
+        C = (ctypes.c_double*(shape[0]*shape[1]))()
+        C = ctypes.POINTER(ctypes.c_double)(C)
+        cblas_lib.cblas_dgemm.argtypes = [ctypes.c_int, ctypes.c_int, ctypes.c_int, ctypes.c_int, 
+                                        ctypes.c_int, ctypes.c_int, ctypes.c_double, ctypes.POINTER(ctypes.c_double),
+                                         ctypes.c_int, ctypes.POINTER(ctypes.c_double), ctypes.c_int, ctypes.c_double,
+                                           ctypes.POINTER(ctypes.c_double), ctypes.c_int]
+        cblas_lib.cblas_dgemm.restype = None  
+        cblas_lib.cblas_dgemm(101, 112, 111, shape[1], shape[0], shape[0], 1.0, A, shape[1], id, shape[0], 0.0, C, shape[0])
+        return C
+    
+    def _stranspose(A, shape):
+        id = MATGEN._seye(shape[0]).data
+        C = (ctypes.c_float*(shape[0]*shape[1]))()
+        C = ctypes.POINTER(ctypes.c_float)(C)
+        cblas_lib.cblas_sgemm.argtypes = [ctypes.c_int, ctypes.c_int, ctypes.c_int, ctypes.c_int, 
+                                        ctypes.c_int, ctypes.c_int, ctypes.c_float, ctypes.POINTER(ctypes.c_float),
+                                         ctypes.c_int, ctypes.POINTER(ctypes.c_float), ctypes.c_int, ctypes.c_float,
+                                           ctypes.POINTER(ctypes.c_float), ctypes.c_int]
+        cblas_lib.cblas_sgemm.restype = None
+        cblas_lib.cblas_sgemm(101, 112, 111, shape[1], shape[0], shape[0], 1.0, A, shape[1], id, shape[0], 0.0, C, shape[0])
+        return C
+        
     
     def _dadd(A, B, shape):
         C = MemOps._dcopy(B, shape)

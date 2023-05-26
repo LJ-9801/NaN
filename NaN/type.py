@@ -22,7 +22,8 @@ class ALLType:
 
         MatOpsDict = {'matmul': {'double': CBLAS._dgemm, 'float': CBLAS._sgemm},
                       'matadd': {'double': CBLAS._dadd, 'float': CBLAS._sadd},
-                      'matsub': {'double': CBLAS._dsub, 'float': CBLAS._ssub},}
+                      'matsub': {'double': CBLAS._dsub, 'float': CBLAS._ssub},
+                      'transpose': {'double': CBLAS._dtranspose, 'float': CBLAS._stranspose},}
         
         MemOpsDict = {'copy': {'double': MemOps._dcopy, 'float': MemOps._scopy},}
 
