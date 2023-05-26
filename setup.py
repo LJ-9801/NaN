@@ -1,5 +1,4 @@
 from setuptools import setup, Extension, find_packages
-from Cython.Build import cythonize
 import os
 # setup extension
 def NaN_setup():
@@ -33,7 +32,7 @@ def NaN_setup():
         packages=find_packages(),
         install_requires=['pylib-openblas', 'colorama', 'cython'],
         python_requires='>=3.8',
-        ext_modules=cythonize([module1]) + [cmodule, dymtype],
+        ext_modules=[module1,cmodule, dymtype],
         zip_safe=False,
         extras_require={
             'testing': ['numpy'],
