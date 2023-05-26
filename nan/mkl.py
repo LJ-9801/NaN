@@ -117,19 +117,19 @@ class CBLAS:
         return C
     
     def _ssub(A, B, shape):
-        C = MemOps._scopy(B, shape)
+        C = MemOps._scopy(A, shape)
         cblas_lib.cblas_saxpy.argtypes = [ctypes.c_int, ctypes.c_float, ctypes.POINTER(ctypes.c_float), ctypes.c_int,
                                           ctypes.POINTER(ctypes.c_float), ctypes.c_int]
         cblas_lib.cblas_saxpy.restype = None
-        cblas_lib.cblas_saxpy(shape[0]*shape[1], -1.0, A, 1, C, 1)
+        cblas_lib.cblas_saxpy(shape[0]*shape[1], -1.0, B, 1, C, 1)
         return C
 
     def _dsub(A, B, shape):
-        C = MemOps._dcopy(B, shape)
+        C = MemOps._dcopy(A, shape)
         cblas_lib.cblas_daxpy.argtypes = [ctypes.c_int, ctypes.c_double, ctypes.POINTER(ctypes.c_double), ctypes.c_int,
                                           ctypes.POINTER(ctypes.c_double), ctypes.c_int]
         cblas_lib.cblas_daxpy.restype = None
-        cblas_lib.cblas_daxpy(shape[0]*shape[1], -1.0, A, 1, C, 1)
+        cblas_lib.cblas_daxpy(shape[0]*shape[1], -1.0, B, 1, C, 1)
         return C
 
 
@@ -186,9 +186,7 @@ class LAPACK:
         info = lp_lib.LAPACKE_dgeev(101, jobvl, jobvr, shape[0], out, shape[1], wr, wi, vl, shape[0], vr, shape[0])
         if info != 0:
             raise Exception("LAPACKE_dgeev failed with error code {}".format(info))
-        out = (ctypes.c_double*(shape[0]*shape[0]))()
-        for i in range(shape[0]): out[i*shape[0]+i] = wr[i]
-        return out, vr
+        return wr, vr
     
     def _seig(A, shape):
         out = MemOps._scopy(A, shape)
@@ -205,9 +203,7 @@ class LAPACK:
         info = lp_lib.LAPACKE_sgeev(101, jobvl, jobvr, shape[0], out, shape[1], wr, wi, vl, shape[0], vr, shape[0])
         if info != 0:
             raise Exception("LAPACKE_sgeev failed with error code {}".format(info))
-        out = (ctypes.c_float*(shape[0]*shape[0]))()
-        for i in range(shape[0]): out[i*shape[0]+i] = wr[i]
-        return out, vr
+        return wr, vr
     
     def _dsvd(A, shape, routine = False):
         aout = MemOps._dcopy(A, shape)
