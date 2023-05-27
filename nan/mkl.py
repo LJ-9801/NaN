@@ -186,7 +186,7 @@ class LAPACK:
         info = lp_lib.LAPACKE_dgeev(101, jobvl, jobvr, shape[0], out, shape[1], wr, wi, vl, shape[0], vr, shape[0])
         if info != 0:
             raise Exception("LAPACKE_dgeev failed with error code {}".format(info))
-        return wr, vr
+        return wr, wi, vr
     
     def _seig(A, shape):
         out = MemOps._scopy(A, shape)
@@ -203,7 +203,7 @@ class LAPACK:
         info = lp_lib.LAPACKE_sgeev(101, jobvl, jobvr, shape[0], out, shape[1], wr, wi, vl, shape[0], vr, shape[0])
         if info != 0:
             raise Exception("LAPACKE_sgeev failed with error code {}".format(info))
-        return wr, vr
+        return wr, wi, vr
     
     def _dsvd(A, shape, routine = False):
         aout = MemOps._dcopy(A, shape)

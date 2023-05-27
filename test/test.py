@@ -89,9 +89,9 @@ class test:
             for j in range(2,self.N):
                 for k in range(2, self.N):
                     ma = self.mat(i,j,k)
-                    w,v = op.eig(ma)
+                    wr, wi,v = op.eig(ma)
                     an = np.ctypeslib.as_array(ma.data, (3,3))
-                    wn = np.ctypeslib.as_array(w.data, (3,))
+                    wn = np.ctypeslib.as_array(wr.data, (3,))
                     vn = np.ctypeslib.as_array(v.data, (9,)).reshape(3,3)
                     wnn, vnn = la.eig(an)
                     wn = np.sort(wn); wnn = np.sort(wnn)
