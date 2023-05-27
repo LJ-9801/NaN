@@ -73,8 +73,8 @@ class ops(matrix):
             raise TypeError('Non-square matrix cannot be eigendecomposed')
         func = ALLType.LapackDict['eig'][in_matrix.dtype]
         wr, wi, ev = func(in_matrix.core.data, in_matrix.shape)
-        return (matrix(object(wr, in_matrix.shape, in_matrix.dtype), in_matrix.dtype), 
-                matrix(object(wi, in_matrix.shape, in_matrix.dtype), in_matrix.dtype),
+        return (matrix(object(wr, (1,in_matrix.shape[0]), in_matrix.dtype), in_matrix.dtype), 
+                matrix(object(wi, (1,in_matrix.shape[0]), in_matrix.dtype), in_matrix.dtype),
                 matrix(object(ev, in_matrix.shape, in_matrix.dtype), in_matrix.dtype))
     
     @staticmethod
